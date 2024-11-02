@@ -1,11 +1,13 @@
 <?php
 
+require './bootstrap.php';
+
 class Database
 {
-    private $host = 'localhost';
-    private $dbName = 'pmpland';
-    private $username = 'root';
-    private $password = '';
+    private $host = DB_HOST;
+    private $dbName = DB_NAME;
+    private $username = DB_USER;
+    private $password = DB_PASS;
     private $connection;
 
     public function __construct()
