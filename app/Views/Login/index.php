@@ -26,10 +26,11 @@
             </div>
             <div class="card-body">
                 <p class="login-box-msg">Silahkan Login Terlebih Dahulu</p>
+                <div class="alert alert-danger" role="alert" id="loginErrorMessage" style="display:none;">
+                </div>
                 <form method="post">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Masukan Username Atau Email"
-                            name="usernameemail">
+                        <input type="text" class="form-control" placeholder="Masukan Username" name="username" id="username" required>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>
@@ -37,7 +38,7 @@
                         </div>
                     </div>
                     <div class="input-group mb-3">
-                        <input type="password" class="form-control" placeholder="Masukan Password" name="password">
+                        <input type="password" class="form-control" placeholder="Masukan Password" name="password" id="password" required>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
@@ -50,7 +51,7 @@
                         </div>
                         <!-- /.col -->
                         <div class="col-4">
-                            <button type="submit" class="btn btn-danger btn-block" name="submit">Masuk</button>
+                            <button type="submit" onclick="login(this)" class="btn btn-danger btn-block" name="submit">Masuk</button>
                         </div>
                         <!-- /.col -->
                     </div>
@@ -66,9 +67,11 @@
     <script src="plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
     <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- AdminLTE App -->
     <script src="dist/js/adminlte.min.js"></script>
     <script src="public/jquery/login.js"></script>
+    <script src="public/js/common.js"></script>
 </body>
 
 </html>

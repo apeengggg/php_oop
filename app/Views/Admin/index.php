@@ -1,6 +1,6 @@
-<?php include __DIR__. '/../templates/header.php' ?>
-<?php include __DIR__. '/../templates/topnavbar.php' ?>
-<?php include __DIR__. '/../templates/sidebar.php' ?>
+<?php include __DIR__. '../../templates/header.php' ?>
+<?php include __DIR__. '../../templates/topnavbar.php' ?>
+<?php include __DIR__. '../../templates/sidebar.php' ?>
 
 <?php
 $_SESSION['logged_in'] = true;
@@ -18,4 +18,4 @@ $_SESSION['logged_in'] = true;
     </div>
 </div>
 
-<?php include __DIR__. '/../templates/footer.php' ?>
+<?php include __DIR__. '../../templates/footer.php' ?>

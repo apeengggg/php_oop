@@ -31,5 +31,8 @@ if(isset($_SESSION['token'])){
 $validate = new Index($token);
 $hasLogin = $validate->check_token();
 
-if(!$hasLogin || empty($token))
+if(!$hasLogin || empty($token)){
     require_once 'app/Views/Login/index.php';
+}else{
+    require './routes/index.php';
+}

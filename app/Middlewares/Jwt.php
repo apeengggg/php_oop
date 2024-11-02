@@ -1,7 +1,7 @@
 <?php
 
-require 'vendor/autoload.php'; // Include Composer's autoloader
-require 'config/bootstrap.php';
+require __DIR__. '/../../vendor/autoload.php';
+require __DIR__. '/../../config/bootstrap.php';
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\ExpiredException;
@@ -29,5 +29,16 @@ class Token
             }
         }
         return false;
+    }
+
+    public function generateToken($data) {
+        $payload = [
+            'iat' => time(), // Issued at
+            'exp' => (time() + 3600) * 24,
+            'iss' => 'pmpland',
+            'data' => $data,
+        ];
+
+        return JWT::encode($payload, $this->secretKey, 'HS256');
     }
 }
