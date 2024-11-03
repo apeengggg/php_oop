@@ -8,7 +8,7 @@ class Auth{
     }
 
     public function login($username){
-        $stmt = $this->db->prepare("SELECT user_id, username, password, name, m_users.role_id, role_name FROM m_users JOIN m_roles ON m_users.role_id = m_roles.role_id WHERE username = :username LIMIT 1");
+        $stmt = $this->db->prepare("SELECT user_id, username, password, name, m_users.role_id, role_name, image FROM m_users JOIN m_roles ON m_users.role_id = m_roles.role_id WHERE username = :username LIMIT 1");
 
         $stmt->bindParam(':username', $username);
         

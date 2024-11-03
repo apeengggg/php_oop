@@ -16,9 +16,7 @@
       <!-- Notifications Dropdown Menu -->
       
       <li class="nav-item">
-        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-          <i class="fas fa-expand-arrows-alt"></i>
-        </a>
+        <img src="" width="35" style="border-radius:50%" id="sideBarImage" alt="User Image">
       </li>
 
     </ul>

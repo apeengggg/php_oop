@@ -155,6 +155,10 @@ class CommonJS{
         var transaction = []
         var rows = "";
 
+        var data = JSON.parse(sessionStorage.getItem('data'))
+
+        $('#sideBarImage').attr('src', data.image)
+
         for(let i in  permission){
             if(permission[i].function_id.substring(0,1) === "M" && permission[i].can_read === "1"){
                 master.push(permission[i])

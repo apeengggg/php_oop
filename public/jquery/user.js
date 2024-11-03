@@ -161,15 +161,15 @@ async function save(){
         formData.append("image", $('#imageInput')[0].files[0])
     }
 
-    commonJS.execUpload('/users/post', formData, 'POST', (response) => {
+    commonJS.swalConfirmAjax("Do you want to save this data?", "Yes", "No", commonJS.execUpload, formData, 'POST', '/users/post', async (response) => {
         console.log("🚀 ~ commonJS.execUpload ~ response:", response)
         if(response.status == 200){
             commonJS.toast(response.message, false)
+            await clearUserForm()
+            await search(1)
         }else{
             commonJS.toast(response.message, true)
         }
-    }, (error)=> {
-        commonJS.toast("Failed Create User", true)
     })
 
 }
