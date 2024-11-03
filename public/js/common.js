@@ -6,19 +6,24 @@ const toastInstance = Swal.mixin({
 });
 
 class CommonJS{
-    get(controller, data, method, success, error){
+    get(controller, success, error) {
         $.ajax({
             url: controller,
-            type: method,
-            data: data,
+            type: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
             success: function (response) {
-                console.log("🚀 ~ CommonJS ~ get ~ response:", response)
+                if(response.status == 200){
+                    if(success){
+                        success(response)
+                    }
+                }
             },
-            error: function (jqXHR, textStatus, errorThrown) {
-                error()
+            error: function (exception) {
+                if(error){
+                    error(exception)
+                }
             }
         });
     }
@@ -28,14 +33,46 @@ class CommonJS{
             url: controller,
             type: method,
             data: data,
+            dataType: 'JSON',
             headers: {
                 'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
             success: function (response) {
-                return response.json()
+                if(response.status == 200){
+                    if(success){
+                        success(response)
+                    }
+                }
             },
-            error: function (response) {
-                return JSON.parse(response)
+            error: function (exception){
+                if(error){
+                    error(exception)
+                }
+            }
+        });
+    }
+
+    execUpload(controller, data, method, success, error){
+        $.ajax({
+            url: controller,
+            type: method,
+            data: data,
+            contentType: false,
+            processData: false,
+            headers: {
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
+            },
+            success: function (response) {
+                if(response.status == 200){
+                    if(success){
+                        success(response)
+                    }
+                }
+            },
+            error: function (exception) {
+                if(error){
+                    error(exception)
+                }
             }
         });
     }
@@ -45,6 +82,14 @@ class CommonJS{
             icon: isError ? 'error' : 'success',
             title: msg
         })
+    }
+
+    loading(stmn){
+        if(stmn){
+            $('#loading').show()
+        }else{
+            $('#loading').hide()
+        }
     }
 }
 

@@ -2,7 +2,7 @@
     <div class="sidebar">
       <div class=" user-panel mt-3 pb-3 mb-3 ">
         <div class="image">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRqjwozjJA3NIOFGdg5zbQQ8j5XYD2vhRDiA&s" width="100" class="img-circle mx-auto d-block " alt="User Image">
+          <img src="../../public/img/common.png" width="100" class="img-circle mx-auto d-block" id="sideBarImage" alt="User Image">
         </div>
       </div>
       <nav class="mt-2">
@@ -16,10 +16,10 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="gudang" class="nav-link">
+            <a href="users" class="nav-link" id="master-user" onclick="redirect(this)">
               <i class="nav-icon fas fa-box"></i>
               <p>
-                Data Barang
+                Master Users
               </p>
             </a>
           </li>
@@ -34,7 +34,7 @@
           </li>
           <li class="nav-header">Label</li>
           <li class="nav-item">
-            <a href="logout.php" class="nav-link">
+            <a href="../../logout.php" class="nav-link">
               <i class="nav-icon fas fa-sign-out-alt text-danger"></i>
               <p class="text">Logout</p>
             </a>

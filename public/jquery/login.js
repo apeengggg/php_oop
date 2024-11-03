@@ -1,4 +1,4 @@
-function login(){
+function login(event){
     event.preventDefault()
     $('#loginErrorMessage').hide()
     const username = $('#username').val();
@@ -25,7 +25,7 @@ function login(){
     }
 
     $.ajax({
-        url: 'app/Controllers/AuthController.php',
+        url: 'index.php/login/authenticate',
         type: 'POST',
         data: data,
         success: function (response) {
@@ -45,5 +45,5 @@ function login(){
 }
 
 $(function(){
-    // commonJS.alertShow()
+    sessionStorage.clear()
 })

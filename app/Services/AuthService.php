@@ -1,5 +1,4 @@
 <?php
-
 class AuthService{
     private $db;
     private $token;
@@ -27,6 +26,7 @@ class AuthService{
                     unset($result['password']);
                 }
                 $jwt = $this->token->generateToken($result);
+                $_SESSION['token'] = $jwt;
                 echo json_encode(['status' => 200, 'message' => 'Login Successfully', 'data' => $result, 'token' => $jwt]);
             }else{
                 echo json_encode(['status' => 400, 'message' => 'Login Failed']);
