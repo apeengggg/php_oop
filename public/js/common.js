@@ -48,9 +48,9 @@ class CommonJS{
         })
     }
 
-    async get(controller, success, error) {
+    async get(uri, success, error) {
         await $.ajax({
-            url: controller,
+            url:baseUrl + uri,
             type: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + sessionStorage.getItem('token'),

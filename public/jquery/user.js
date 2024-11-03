@@ -46,8 +46,10 @@ function clearUserForm(){
     $('#userName').val('')
     $('#userUsername').val('')
     $('#userRole').val('')
+    $('#userPassword').val('')
+    $('#imageInput').val('')
     $('#passwordForm').show()
-    $('#profileImage').attr('src', '../../public/img/common.png');
+    $('#profileImage').attr('src', '../public/img/common.png');
 }
 
 function changeImage(){
@@ -98,9 +100,8 @@ async function search(page){
         param += `&name=${$('#name').val()}`
     }
 
-    var url = baseUrl + '/users/get'
     $(".template-data").remove()
-    await commonJS.get(url+param, async (response)=> {
+    await commonJS.get('/users/get'+param, async (response)=> {
         // console.log("🚀 ~ commonJS.get ~ response:", response)
         if(response.status == 200){
             if(response.data.length > 0){
@@ -118,6 +119,59 @@ async function search(page){
         console.error(error)
     })
     commonJS.loading(false)
+}
+
+async function save(){
+    $('#userFormErrorMessage').hide();
+    var name = $('#userName').val()
+    var username = $('#userUsername').val()
+    var role = $('#userRole').val()
+    var password = $('#userPassword').val()
+
+    var error = []
+    if(name == ''){
+        error.push("Name Required")
+    }
+
+    if(username == ''){
+        error.push("Username Required")
+    }
+
+    if(role == ''){
+        error.push("Role Required")
+    }
+
+    if(password == ''){
+        error.push("Password Required")
+    }
+
+    if(error.length > 0){
+        $('#userFormErrorMessage').text(error.toString()).show();
+        return;
+    }
+
+    var formData = new FormData()
+    formData.append("name", name)
+    formData.append("username", username)
+    formData.append("role", role)
+    formData.append("password", password)
+    
+    if($('#imageInput')[0].files[0]){
+        // console.log("🚀 ~ save ~ $('#imageInput')[0].files[0]:", $('#imageInput')[0].files[0])
+        formData.append("image", $('#imageInput')[0].files[0])
+    }
+
+    commonJS.execUpload('/users/post', formData, 'POST', (response) => {
+        console.log("🚀 ~ commonJS.execUpload ~ response:", response)
+        if(response.status == 200){
+            commonJS.toast(response.message, false)
+        }else{
+            commonJS.toast(response.message, true)
+        }
+    }, (error)=> {
+        commonJS.toast("Failed Create User", true)
+    })
+
 }
 
 $(async function (){

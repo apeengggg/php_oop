@@ -49,6 +49,29 @@ class User {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function store($body, $filename){
+        try{
+            $user_id = uniqid();
+            $query = "INSERT INTO m_users (user_id, name, username, password, role_id, image) VALUES (:user_id, :name, :username, :pass, :role_id, :image)";
+            $stmt = $this->conn->prepare($query);
+
+            $hashedPassword = password_hash($body['password'], PASSWORD_BCRYPT);
+
+            $stmt->bindParam(':user_id', $user_id);
+            $stmt->bindParam(':name', $body['name']);
+            $stmt->bindParam(':username', $body['username']);
+            $stmt->bindParam(':pass', $hashedPassword);
+            $stmt->bindParam(':image', $filename);
+            $stmt->bindParam(':role_id', $body['role']);
+
+            $stmt->execute();
+            return true;
+        }catch(\Exception $e){
+            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            exit;
+        }
+    }
+
     public function destroy($user_id){
         try{
             $query = "UPDATE " . $this->table . " SET status = 0 WHERE user_id = :user_id";
@@ -57,25 +80,8 @@ class User {
             $stmt->execute();
             return true;
         }catch(\Exception $e){
-            var_dump($e->getMessage());
-            return false;
+            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            exit;
         }
-    }
-
-    public function findUserByEmail($username) {
-        $query = "SELECT name, username, user_id FROM " . $this->table . " WHERE username = :username LIMIT 1";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':username', $username);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function createUser($data) {
-        $query = "INSERT INTO " . $this->table . " (email, password, role) VALUES (:email, :password, :role)";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':email', $data['email']);
-        $stmt->bindParam(':password', password_hash($data['password'], PASSWORD_DEFAULT));
-        $stmt->bindParam(':role', $data['role']);
-        return $stmt->execute();
     }
 }

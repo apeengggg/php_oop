@@ -27,6 +27,47 @@ class UserController {
         }
     }
 
+    public function store(){
+        header('Content-Type: application/json');
+
+        $body = $_POST;
+        $filename = '';
+        try{
+            if(!empty($_FILES) || isset($_FILES['image'])){
+                $file = $_FILES['image'];
+
+                if ($file['error'] !== UPLOAD_ERR_OK) {
+                    echo json_encode(['status' => 400, 'message'=> 'Error Uploading Image']);
+                    exit;
+                }
+
+                $uploadDir = 'public/img/profile/';
+                $uniqueName = uniqid() . '_' . basename($file['name']);
+                $uploadFile = $uploadDir . $uniqueName;
+
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+
+                if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
+                    $filename = '../'.$uploadDir.$uniqueName;
+                } else {
+                    echo json_encode(['status' => 400, 'message'=> 'Error Uploading Image']);
+                    exit;
+                } 
+            }
+
+            if($filename === ''){
+                $filename = '../public/img/common.png';
+            }
+
+            $this->userModel->store($body, $filename);
+            echo json_encode(['status' => 200, 'message'=> 'Success Create User']);
+        }catch(\Exception $e){
+            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+        }
+    }
+
     public function destroy(){
         if(!isset($_POST['user_id'])){
             echo json_encode(['status' => 400, 'message' => 'User Id Required']);
