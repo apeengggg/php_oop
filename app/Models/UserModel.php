@@ -11,7 +11,7 @@ class User {
     public function all($param) {
         $params = [];
 
-        $query = "SELECT name, username, user_id, role_name, m_users.role_id FROM " . $this->table;
+        $query = "SELECT name, username, user_id, role_name, m_users.role_id, image FROM " . $this->table;
         
         $query .= ' INNER JOIN m_roles ON m_users.role_id = m_roles.role_id ';
 

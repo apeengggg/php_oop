@@ -35,6 +35,7 @@ function editData(data){
     $('#userFormTitle').text("Edit User")
     $('#userName').val(data.name)
     $('#userUsername').val(data.username)
+    $('#profileImage').attr('src', data.image)
     $('#userRole').val(data.role_id)
     $('#passwordForm').hide()
 }
@@ -68,7 +69,10 @@ function buildTemplate(index, data){
     </button>
     `
     rows += '<tr class="template-data">'
-        rows += '<td>'+ data[index].name +'</td>'
+        rows += '<td style="text-align: left;">' 
+            rows += `<img src="${data[index].image}" alt="Profile Image" class="img-thumbnail" style="width: 50px; height: 50px; margin-right: 8px;">`
+            rows += data[index].name
+        rows += '</td>'
         rows += '<td>'+ data[index].username +'</td>'
         rows += '<td>'+ data[index].role_name +'</td>'
         rows += '<td>'+ button +'</td>'
