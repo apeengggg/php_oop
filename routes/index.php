@@ -25,13 +25,13 @@ switch ($uri){
     case '/login/authenticate':
         $authController->login();
         break;
-    case '/admin/dashboard':
+    case '/dashboard':
         include __DIR__. '/../app/Views/Admin/index.php';
         break;
-    case '/admin/users':
+    case '/users':
         $userController->index();
         break;
-    case '/users':
+    case '/users/get':
         $jwt->handle();
         $userController->get();
         break;

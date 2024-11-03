@@ -143,6 +143,88 @@ class CommonJS{
             $('#loading').hide()
         }
     }
+
+    setupPermission(function_id){
+        var data = JSON.parse(sessionStorage.getItem("data"))
+        var permission = data.permission
+        var master = []
+        var url = window.location.pathname.split("/")
+        var len = url.length
+        console.log("🚀 ~ CommonJS ~ setupPermission ~ url:", "/"+url[len-1])
+        
+        var transaction = []
+        var rows = "";
+
+        for(let i in  permission){
+            if(permission[i].function_id.substring(0,1) === "M" && permission[i].can_read === "1"){
+                master.push(permission[i])
+            }
+            if(permission[i].function_id.substring(0,1) === "T" && permission[i].can_read === "1"){
+                transaction.push(permission[i])
+            }
+
+            if(permission[i].function_id == function_id){
+                if(permission[i].can_create === "0"){
+                    $("#btnAdd").remove()
+                }
+                if(permission[i].can_edit === "0"){
+                    $("#btnEdit").remove()
+                }
+                if(permission[i].can_delete === "0"){
+                    $("#btnDelete").remove()
+                }
+            }
+        }
+
+        if(master.length > 0) {
+            rows += `<li class="nav-header" id="#sidebarMaster">Master</li>`
+            for(let j in master){
+                rows += `<li class="nav-item">`
+                if("/"+url[len-1] === master[j].url){
+                    rows += `<a href="${baseUrl}${master[j].url}" class="nav-link active">`
+                }else{
+                    rows += `<a href="${baseUrl}${master[j].url}" class="nav-link">`
+                }
+
+                rows += `
+                    <i class="nav-icon fas ${master[j].icon}"></i>
+                    <p>
+                        ${master[j].function_name}
+                    </p>
+                </a>
+                </li>
+                `
+            }
+        }
+
+        if(transaction.length > 0) {
+            rows += `<li class="nav-header">Transaction</li>`
+            for(let k in transaction){
+                if(window.location.pathname === transaction[k].url){
+                    rows += `<li class="nav-item active">`
+                }else{
+                    rows += `<li class="nav-item">`
+                }
+
+                rows += `
+                <a href="${transaction[k].url}?>" class="nav-link">
+                    <i class="nav-icon fas ${transaction[k].icon}"></i>
+                    <p>
+                        ${transaction[k].function_name}
+                    </p>
+                </a>
+                </li>
+                `
+            }
+        }
+
+        console.log("🚀 ~ CommonJS ~ setupPermission ~ master:", master)
+        console.log("🚀 ~ CommonJS ~ setupPermission ~ transaction:", transaction)
+        console.log("🚀 ~ CommonJS ~ setupPermission ~ window.location.pathname:", window.location)
+
+        $("#nav").html(rows)
+        console.log("🚀 ~ CommonJS ~ setupPermission ~ data:", data)
+    }
 }
 
 const commonJS = new CommonJS()

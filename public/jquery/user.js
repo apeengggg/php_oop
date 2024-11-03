@@ -57,12 +57,11 @@ function changeImage(){
 function buildTemplate(index, data){
     var rows = ""
     var string = JSON.stringify(data[index])
-    // console.log("🚀 ~ buildTemplate ~ string:", string)
     var button = `
-    <button class='btn btn-sm btn-primary' onclick='editData(${string})'>
+    <button id="btnEdit" class='btn btn-sm btn-primary' onclick='editData(${string})'>
         <i class='fas fa-edit'></i>
     </button>
-    <button class='btn btn-sm btn-danger ml-2' onclick='deleteData("${data[index].user_id}")'>
+    <button id="btnDelete" class='btn btn-sm btn-danger ml-2' onclick='deleteData("${data[index].user_id}")'>
         <i class='fas fa-trash'></i>
     </button>
     `
@@ -99,7 +98,7 @@ async function search(page){
         param += `&name=${$('#name').val()}`
     }
 
-    var url = baseUrl + '/users'
+    var url = baseUrl + '/users/get'
     $(".template-data").remove()
     commonJS.get(url+param, async (response)=> {
         // console.log("🚀 ~ commonJS.get ~ response:", response)
@@ -126,6 +125,6 @@ async function search(page){
 }
 
 $(function(){
+    commonJS.setupPermission("M001");
     search(initPage)
-    // commonJS.swalError('Error!', null)
 });

@@ -1,4 +1,4 @@
-function login(event){
+function login(){
     $('#loginErrorMessage').hide()
     const username = $('#username').val();
     const password = $('#password').val();
@@ -33,7 +33,7 @@ function login(event){
             if(result.status == 200){
                 sessionStorage.setItem('token', result.token)
                 sessionStorage.setItem('data', JSON.stringify(result.data))
-                window.location.href = 'index.php/admin/dashboard'
+                window.location.href = 'index.php/users'
             }else{
                 commonJS.toast(result.message, true)
             }

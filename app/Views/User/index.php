@@ -57,7 +57,7 @@ $_SESSION['logged_in'] = true;
                                     </div>
                                     </div>
                                     <div class="form-group text-center">
-                                        <img id="profileImage" onclick="changeImage()" src="../../public/img/common.png" alt="" width="100">
+                                        <img id="profileImage" onclick="changeImage()" src="../public/img/common.png" alt="" width="100">
                                         <input type="file" id="imageInput" accept="image/*" style="display: none;">
                                     </div>
                                     <div class="form-group">
@@ -85,7 +85,7 @@ $_SESSION['logged_in'] = true;
                                         <input type="password" class="form-control" id="userPassword" placeholder="Password">
                                     </div>
                                 </div>
-                                <div class="card-footer text-right">
+                                <div class="card-footer text-right" id="btnAdd">
                                     <button type="button" onclick="clearUserForm()" class="btn btn-danger">Clear</button>
                                     <button type="button" onclick="save()" class="btn btn-primary">Save</button>
                                 </div>
