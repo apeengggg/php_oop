@@ -35,6 +35,7 @@ function editData(data){
     $('#userFormTitle').text("Edit User")
     $('#userName').val(data.name)
     $('#userUsername').val(data.username)
+    $('#userRole').val(data.role_id)
     $('#passwordForm').hide()
 }
 
@@ -44,6 +45,7 @@ function clearUserForm(){
     $('#userFormTitle').text(title)
     $('#userName').val('')
     $('#userUsername').val('')
+    $('#userRole').val('')
     $('#passwordForm').show()
     $('#profileImage').attr('src', '../../public/img/common.png');
 }
@@ -55,7 +57,7 @@ function changeImage(){
 function buildTemplate(index, data){
     var rows = ""
     var string = JSON.stringify(data[index])
-    console.log("🚀 ~ buildTemplate ~ string:", string)
+    // console.log("🚀 ~ buildTemplate ~ string:", string)
     var button = `
     <button class='btn btn-sm btn-primary' onclick='editData(${string})'>
         <i class='fas fa-edit'></i>
@@ -67,14 +69,22 @@ function buildTemplate(index, data){
     rows += '<tr class="template-data">'
         rows += '<td>'+ data[index].name +'</td>'
         rows += '<td>'+ data[index].username +'</td>'
+        rows += '<td>'+ data[index].role_name +'</td>'
         rows += '<td>'+ button +'</td>'
     rows += '</tr>'
 
     return rows;
 }
 
-function deleteData(user_id){
-    alert(user_id)
+async function deleteData(user_id){
+    commonJS.swalConfirmAjax('Are you sure want to delete this data?', 'Yes', 'No', commonJS.exec, {user_id: user_id} , 'POST', '/user/delete', (response)=> {
+        if(response.status == 200){
+            commonJS.toast(response.message, false)
+            search(1)
+        }else{
+            commonJS.toast(response.message, true)
+        }
+    })
 }
 
 async function search(page){
@@ -92,18 +102,18 @@ async function search(page){
     var url = baseUrl + '/users'
     $(".template-data").remove()
     commonJS.get(url+param, async (response)=> {
-        console.log("🚀 ~ commonJS.get ~ response:", response)
+        // console.log("🚀 ~ commonJS.get ~ response:", response)
         if(response.status == 200){
             if(response.data.length > 0){
                 $('#userNotFound').hide()
                 var rows = ''
 
                 for(var index in response.data){
-                    console.log("🚀 ~ commonJS.get ~ index:", index)
+                    // console.log("🚀 ~ commonJS.get ~ index:", index)
                     rows += buildTemplate(index, response.data)
                 }
 
-                console.log("🚀 ~ commonJS.get ~ rows:", rows)
+                // console.log("🚀 ~ commonJS.get ~ rows:", rows)
                 $("#userData>tbody").append(rows);
 
             }
@@ -117,4 +127,5 @@ async function search(page){
 
 $(function(){
     search(initPage)
+    // commonJS.swalError('Error!', null)
 });

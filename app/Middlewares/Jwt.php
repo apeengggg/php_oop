@@ -11,25 +11,32 @@ class Token
 {
     private $secretKey = JWT_SECRET_KEY;
 
-    public function handle($request)
+    public function handle()
     {
-        if (isset($request['headers']['Authorization'])) {
-            $authHeader = $request['headers']['Authorization'];
-            list($jwt) = sscanf($authHeader, 'Bearer %s');
-
-            if ($jwt) {
+        header('Content-Type: application/json');
+        $headers = apache_request_headers();
+        if (isset($headers['Authorization'])) {
+            $authHeader = $headers['Authorization'];
+            
+            if (sscanf($authHeader, 'Bearer %s', $jwt) === 1) {
                 try {
                     $decoded = JWT::decode($jwt, new Key($this->secretKey, 'HS256'));
                     $request['user'] = (array) $decoded->data;
-                    return true;
                 } catch (ExpiredException $e) {
-                    return false;
+                    echo json_encode(["status" => 401, 'message' => "Token has expired."]);
+                    exit;
                 } catch (Exception $e) {
-                    return false;
+                    echo json_encode(["status" => 401, 'message' => "Invalid token."]);
+                    exit;
                 }
+            } else {
+                echo json_encode(["status" => 401, 'message' => "Authorization header format is invalid."]);
+                exit;
             }
+        } else {
+            echo json_encode(["status" => 401, 'message' => "Authorization header not found."]);
+            exit;
         }
-        return false;
     }
 
     public function generateToken($data) {

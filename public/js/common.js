@@ -5,7 +5,49 @@ const toastInstance = Swal.mixin({
     timer: 3000
 });
 
+const swalInstance = Swal.mixin({
+    customClass: {
+        confirmButton: 'btn btn-primary btn-confirm mr-1',
+        cancelButton: 'btn btn-danger btn-cancel',
+    },
+    buttonsStyling: false
+})
+
 class CommonJS{
+    swalError(message, callback) {
+        swalInstance.fire({
+            title: 'Oops!',
+            text: message,
+            icon: 'error',
+            width: "400px",
+            confirmButtonText: 'Ok'
+        }).then(function () {
+            if (callback) {
+                callback()
+            }
+        })
+    }
+
+    swalConfirmAjax(message, confirmText, denyText, ajaxMethod, data, method, url, callback) {
+        swalInstance.fire({
+            title: 'Confirmation',
+            html: message,
+            width: "400px",
+            confirmButtonText: confirmText,
+            showCancelButton: true,
+            closeOnConfirm: false,
+            cancelButtonText: denyText,
+            reverseButtons: false,
+            showLoaderOnConfirm: true,
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then(async (result) => {
+            console.log("🚀 ~ CommonJS ~ swalConfirmAjax ~ result:", result)
+            if(result.isConfirmed){
+                await ajaxMethod(url, data, method, callback)
+            }
+        })
+    }
+
     get(controller, success, error) {
         $.ajax({
             url: controller,
@@ -14,23 +56,25 @@ class CommonJS{
                 'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
             success: function (response) {
+            console.log("🚀 ~ CommonJS ~ get ~ response:", response)
+
                 if(response.status == 200){
                     if(success){
                         success(response)
                     }
-                }
-            },
-            error: function (exception) {
-                if(error){
-                    error(exception)
+                }else if(response.status == 401){
+                    commonJS.swalError(response.message, () => {
+                        window.location.href = baseUrl
+                    })
                 }
             }
         });
     }
 
-    exec(controller, data, method, success, error){
+    exec(uri, data, method, success, error){
+        console.log("🚀 ~ CommonJS ~ exec ~ uri, data, method, success, error:", uri, data, method, success, error)
         $.ajax({
-            url: controller,
+            url: baseUrl + uri,
             type: method,
             data: data,
             dataType: 'JSON',
@@ -42,6 +86,10 @@ class CommonJS{
                     if(success){
                         success(response)
                     }
+                }else if(response.status == 401){
+                    commonJS.swalError(response.message, () => {
+                        window.location.href = baseUrl
+                    })
                 }
             },
             error: function (exception){
@@ -52,9 +100,9 @@ class CommonJS{
         });
     }
 
-    execUpload(controller, data, method, success, error){
+    execUpload(uri, data, method, success, error){
         $.ajax({
-            url: controller,
+            url: baseUrl + uri,
             type: method,
             data: data,
             contentType: false,
@@ -67,6 +115,10 @@ class CommonJS{
                     if(success){
                         success(response)
                     }
+                }else if(response.status == 401){
+                    commonJS.swalError(response.message, () => {
+                        window.location.href = baseUrl
+                    })
                 }
             },
             error: function (exception) {

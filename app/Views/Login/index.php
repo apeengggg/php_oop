@@ -51,7 +51,7 @@
                         </div>
                         <!-- /.col -->
                         <div class="col-4">
-                            <button type="submit" onclick="login(this)" class="btn btn-danger btn-block" name="submit">Masuk</button>
+                            <button type="button" onclick="login(this)" class="btn btn-danger btn-block" name="submit">Masuk</button>
                         </div>
                         <!-- /.col -->
                     </div>

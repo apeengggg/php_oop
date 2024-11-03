@@ -1,5 +1,4 @@
 function login(event){
-    event.preventDefault()
     $('#loginErrorMessage').hide()
     const username = $('#username').val();
     const password = $('#password').val();
@@ -29,6 +28,7 @@ function login(event){
         type: 'POST',
         data: data,
         success: function (response) {
+        console.log("🚀 ~ login ~ response:", response)
             let result = JSON.parse(response) || {status: 400, message: 'Bad Request'}
             if(result.status == 200){
                 sessionStorage.setItem('token', result.token)

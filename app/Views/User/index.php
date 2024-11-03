@@ -33,15 +33,16 @@ $_SESSION['logged_in'] = true;
                                 <tr>
                                     <th onclick="orderDynamically('name')">Name</th>
                                     <th onclick="orderDynamically('username')">Username</th>
+                                    <th onclick="orderDynamically('role_name')">Role</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr id="userNotFound">
-                                    <td colspan="3">Not Found</td>
+                                    <td colspan="4">Not Found</td>
                                 </tr>
                                 <tr id="loading">
-                                    <td colspan="3">Loading</td>
+                                    <td colspan="4">Loading</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -51,6 +52,10 @@ $_SESSION['logged_in'] = true;
                             <div class="card">
                                 <h5 class="card-header" id="userFormTitle">Add User</h5>
                                 <div class="card-body"id="formUser">
+                                    <div class="form-group">
+                                    <div class="alert alert-danger" role="alert" id="userFormErrorMessage" style="display:none;">
+                                    </div>
+                                    </div>
                                     <div class="form-group text-center">
                                         <img id="profileImage" onclick="changeImage()" src="../../public/img/common.png" alt="" width="100">
                                         <input type="file" id="imageInput" accept="image/*" style="display: none;">
@@ -65,6 +70,15 @@ $_SESSION['logged_in'] = true;
                                     <div class="form-group">
                                         <label for="username">Username</label>
                                         <input type="text" class="form-control" id="userUsername" placeholder="Username">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="role">Role</label>
+                                        <select name="role" id="userRole" class="form-control">
+                                            <option value="">-- Choose Role --</option>
+                                            <option value="1">Super Admin</option>
+                                            <option value="2">User</option>
+                                        </select>
+                                        <!-- <input type="text" class="form-control" id="userRole" placeholder="Username"> -->
                                     </div>
                                     <div class="form-group" id="passwordForm">
                                         <label for="password">Password</label>

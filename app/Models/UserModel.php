@@ -11,7 +11,11 @@ class User {
     public function all($param) {
         $params = [];
 
-        $query = "SELECT name, username, user_id FROM " . $this->table . ' WHERE 1=1 ';
+        $query = "SELECT name, username, user_id, role_name, m_users.role_id FROM " . $this->table;
+        
+        $query .= ' INNER JOIN m_roles ON m_users.role_id = m_roles.role_id ';
+
+        $query .= ' WHERE 1=1 AND status = 1 ';
 
         if (!empty($param['username'])) {
             $query .= ' AND username = :username ';
@@ -43,6 +47,19 @@ class User {
 
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function destroy($user_id){
+        try{
+            $query = "UPDATE " . $this->table . " SET status = 0 WHERE user_id = :user_id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':user_id', $user_id);
+            $stmt->execute();
+            return true;
+        }catch(\Exception $e){
+            var_dump($e->getMessage());
+            return false;
+        }
     }
 
     public function findUserByEmail($username) {

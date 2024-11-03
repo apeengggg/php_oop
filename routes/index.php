@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__.'/../app/Controllers/AuthController.php';
 require_once __DIR__.'/../app/Controllers/UserController.php';
+require_once __DIR__.'/../app/Middlewares/Jwt.php';
 require_once __DIR__.'/../config/Database.php';
 
 $uri;
@@ -9,6 +10,7 @@ $db = (new Database())->getConnection();
 
 $authController = new AuthController();
 $userController = new UserController($db);
+$jwt = new Token();
 
 if(isset($_SERVER['PATH_INFO'])){
     $uri = $_SERVER['PATH_INFO'];
@@ -30,7 +32,13 @@ switch ($uri){
         $userController->index();
         break;
     case '/users':
+        $jwt->handle();
         $userController->get();
+        break;
+    case '/user/delete':
+        $jwt->handle();
+        $userController->destroy();
+        break;
     default:
         break;
     
