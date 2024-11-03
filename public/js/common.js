@@ -48,8 +48,8 @@ class CommonJS{
         })
     }
 
-    get(controller, success, error) {
-        $.ajax({
+    async get(controller, success, error) {
+        await $.ajax({
             url: controller,
             type: 'GET',
             headers: {
@@ -71,9 +71,9 @@ class CommonJS{
         });
     }
 
-    exec(uri, data, method, success, error){
+    async exec(uri, data, method, success, error){
         console.log("🚀 ~ CommonJS ~ exec ~ uri, data, method, success, error:", uri, data, method, success, error)
-        $.ajax({
+        await $.ajax({
             url: baseUrl + uri,
             type: method,
             data: data,
@@ -100,8 +100,8 @@ class CommonJS{
         });
     }
 
-    execUpload(uri, data, method, success, error){
-        $.ajax({
+    async execUpload(uri, data, method, success, error){
+        await $.ajax({
             url: baseUrl + uri,
             type: method,
             data: data,
@@ -167,11 +167,11 @@ class CommonJS{
                 if(permission[i].can_create === "0"){
                     $("#btnAdd").remove()
                 }
-                if(permission[i].can_edit === "0"){
-                    $("#btnEdit").remove()
+                if(permission[i].can_update === "0"){
+                    $('[id*="btnEdit"]').remove()
                 }
                 if(permission[i].can_delete === "0"){
-                    $("#btnDelete").remove()
+                    $('[id*="btnDelete"]').remove()
                 }
             }
         }
@@ -200,14 +200,14 @@ class CommonJS{
         if(transaction.length > 0) {
             rows += `<li class="nav-header">Transaction</li>`
             for(let k in transaction){
-                if(window.location.pathname === transaction[k].url){
-                    rows += `<li class="nav-item active">`
+                rows += `<li class="nav-item">`
+                if("/"+url[len-1] === transaction[k].url){
+                    rows += `<a href="${baseUrl}${transaction[k].url}" class="nav-link active">`
                 }else{
-                    rows += `<li class="nav-item">`
+                    rows += `<a href="${baseUrl}${transaction[k].url}" class="nav-link">`
                 }
 
                 rows += `
-                <a href="${transaction[k].url}?>" class="nav-link">
                     <i class="nav-icon fas ${transaction[k].icon}"></i>
                     <p>
                         ${transaction[k].function_name}
@@ -218,12 +218,7 @@ class CommonJS{
             }
         }
 
-        console.log("🚀 ~ CommonJS ~ setupPermission ~ master:", master)
-        console.log("🚀 ~ CommonJS ~ setupPermission ~ transaction:", transaction)
-        console.log("🚀 ~ CommonJS ~ setupPermission ~ window.location.pathname:", window.location)
-
         $("#nav").html(rows)
-        console.log("🚀 ~ CommonJS ~ setupPermission ~ data:", data)
     }
 }
 

@@ -58,10 +58,10 @@ function buildTemplate(index, data){
     var rows = ""
     var string = JSON.stringify(data[index])
     var button = `
-    <button id="btnEdit" class='btn btn-sm btn-primary' onclick='editData(${string})'>
+    <button id="btnEdit${index+1}" class='btn btn-sm btn-primary' onclick='editData(${string})'>
         <i class='fas fa-edit'></i>
     </button>
-    <button id="btnDelete" class='btn btn-sm btn-danger ml-2' onclick='deleteData("${data[index].user_id}")'>
+    <button id="btnDelete${index+1}" class='btn btn-sm btn-danger ml-2' onclick='deleteData("${data[index].user_id}")'>
         <i class='fas fa-trash'></i>
     </button>
     `
@@ -100,31 +100,27 @@ async function search(page){
 
     var url = baseUrl + '/users/get'
     $(".template-data").remove()
-    commonJS.get(url+param, async (response)=> {
+    await commonJS.get(url+param, async (response)=> {
         // console.log("🚀 ~ commonJS.get ~ response:", response)
         if(response.status == 200){
             if(response.data.length > 0){
                 $('#userNotFound').hide()
                 var rows = ''
 
-                for(var index in response.data){
-                    // console.log("🚀 ~ commonJS.get ~ index:", index)
-                    rows += buildTemplate(index, response.data)
-                }
-
-                // console.log("🚀 ~ commonJS.get ~ rows:", rows)
+                rows = await Promise.all(
+                    response.data.map((data, index) => buildTemplate(index, response.data))
+                );
+                console.log("🚀 ~ commonJS.get ~ rows:", rows)
                 $("#userData>tbody").append(rows);
-
             }
         }
     }, (error) => {
         console.error(error)
     })
-
     commonJS.loading(false)
 }
 
-$(function(){
-    commonJS.setupPermission("M001");
-    search(initPage)
+$(async function (){
+    await search(initPage)
+    await commonJS.setupPermission("M001");
 });
