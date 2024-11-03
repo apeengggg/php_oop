@@ -17,10 +17,12 @@ class UserController {
     public function get(){
         $param = $_GET;
         try{
-            $data = $this->userModel->all($param);
+            $results = $this->userModel->all($param);
+            $totalPages = $results['totalPages'];
+            $data = $results['data'];
 
             header('Content-Type: application/json');
-            echo json_encode(['status' => 200, 'data'=> $data, 'message'=> 'Success Get Data']);
+            echo json_encode(['status' => 200, 'data'=> $data, 'totalPages'=> $totalPages, 'message'=> 'Success Get Data']);
         }catch(\Exception $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
 

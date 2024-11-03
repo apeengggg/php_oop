@@ -46,6 +46,10 @@ $_SESSION['logged_in'] = true;
                                 </tr>
                             </tbody>
                         </table>
+                        <nav>
+                            <ul id="pagination" class="pagination justify-content-end"></ul>
+                            </ul>
+                        </nav>
                     </div>
                     <div class="col-md-4">
                         <form action="POST" enctype="multipart/form-data">

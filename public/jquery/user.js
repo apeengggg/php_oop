@@ -57,6 +57,45 @@ function changeImage(){
     $('#imageInput').click();
 }
 
+function renderPagination(totalPages, currentPage) {
+    const pagination = document.getElementById('pagination');
+    pagination.innerHTML = '';
+
+    if (currentPage > 1) {
+        pagination.innerHTML += `
+            <li class="page-item">
+                <button type="button" class="page-link" onclick="search(${currentPage - 1})">Prev</button>
+            </li>
+        `;
+    }
+
+    let startPage = Math.max(1, currentPage - 1);
+    let endPage = Math.min(totalPages, currentPage + 1);
+
+    if (currentPage === 1) {
+        endPage = Math.min(totalPages, currentPage + 2);
+    } else if (currentPage === totalPages) {
+        startPage = Math.max(1, currentPage - 2);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        const activeClass = i === currentPage ? 'active' : '';
+        pagination.innerHTML += `
+            <li class="page-item ${activeClass}">
+                <button type="button" class="page-link" onclick="search(${i})">${i}</button>
+            </li>
+        `;
+    }
+
+    if (currentPage < totalPages) {
+        pagination.innerHTML += `
+            <li class="page-item">
+                <a class="page-link" href="#" onclick="search(${currentPage + 1})">Next</a>
+            </li>
+        `;
+    }
+}
+
 function buildTemplate(index, data){
     var rows = ""
     var string = JSON.stringify(data[index])
@@ -115,6 +154,9 @@ async function search(page){
                 rows = await Promise.all(
                     response.data.map((data, index) => buildTemplate(index, response.data))
                 );
+
+                await renderPagination(response.totalPages, page)
+
                 console.log("🚀 ~ commonJS.get ~ rows:", rows)
                 $("#userData>tbody").append(rows);
             }

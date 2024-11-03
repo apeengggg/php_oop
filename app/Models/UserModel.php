@@ -8,22 +8,30 @@ class User {
         $this->conn = $db;
     }
 
+    public function countAll(){
+    }
+
     public function all($param) {
         $params = [];
 
         $query = "SELECT name, username, user_id, role_name, m_users.role_id, image FROM " . $this->table;
+
+        $countQuery = "SELECT COUNT(*) as total FROM ". $this->table;
         
         $query .= ' INNER JOIN m_roles ON m_users.role_id = m_roles.role_id ';
 
         $query .= ' WHERE 1=1 AND status = 1 ';
+        $countQuery .= ' WHERE 1=1 AND status = 1 ';
 
         if (!empty($param['username'])) {
             $query .= ' AND username = :username ';
+            $countQuery .= ' AND username = :username ';
             $params[':username'] = $param['username'];
         }
         
         if (!empty($param['name'])) {
             $query .= ' AND name = :name ';
+            $countQuery .= ' AND name = :name ';
             $params[':name'] = $param['name'];
         }
 
@@ -38,15 +46,24 @@ class User {
         $query .= ' LIMIT :limit OFFSET :offset ';
 
         $stmt = $this->conn->prepare($query);
+        $stmtCount = $this->conn->prepare($countQuery);
+
         foreach ($params as $key => $value) {
             $stmt->bindValue($key, $value);
+            $stmtCount->bindValue($key, $value);
         }
 
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmtCount->execute();
+
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $totalRows = $stmtCount->fetch(PDO::FETCH_ASSOC)['total'];
+        $totalPages = ceil($totalRows / $param['perPage']);
+
+        return ['data' => $data, 'totalPages' => $totalPages];
     }
 
     public function store($body, $filename){
