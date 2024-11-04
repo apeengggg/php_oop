@@ -3,7 +3,7 @@ var initPage = 1;
 var perPagePages = 3;
 var dir = 'asc';
 var isEdit = false;
-var user_id = '';
+var event_id = '';
 
 $('.event-datepicker').daterangepicker({
     singleDatePicker: false,
@@ -13,16 +13,42 @@ $('.event-datepicker').daterangepicker({
     }
 });
 
-$('#imageInput').change(function(event) {
+$('#eventDate').daterangepicker({
+    singleDatePicker: true,
+    showDropdowns: true,
+    minDate: moment(),
+    locale: {
+        format: 'DD/MM/YYYY',
+    }
+});
+
+$('#eventImage').change(function(event) {
     var file = event.target.files[0];
     if (file) {
         var reader = new FileReader();
         reader.onload = function(e) {
-            $('#profileImage').attr('src', e.target.result);
+            $('#previewEventImage').attr('src', e.target.result);
         };
         reader.readAsDataURL(file);
     }
 });
+
+function add(isAdd){
+    if(!isAdd){
+        $("#listEvent").show()
+        $("#addEvent").hide()
+    }else{
+        $("#listEvent").hide()
+        $("#addEvent").show()
+    }
+    $("#eventName").val('')
+    $("#eventDate").val('')
+    $("#eventTime").val('')
+    $("#eventLocation").val('')
+    $("#eventDescription").val('')
+    $("#eventImage").val('')
+    $("#previewEventImage").attr('src', '../public/img/common_event.png');
+}
 
 async function orderDynamically(value){
     orderBy = value
@@ -41,13 +67,19 @@ async function changePerPage(perPage){
 
 function editData(data){
     isEdit = true
-    $('#userFormTitle').text("Edit User")
-    $('#userName').val(data.name)
-    $('#userUsername').val(data.username)
-    $('#profileImage').attr('src', data.image)
-    $('#userRole').val(data.role_id)
-    $('#passwordForm').hide()
-    user_id = data.user_id
+
+    add(1)
+
+    let date = moment(data.date).format('DD/MM/YYYY')
+
+    $('#formTitle').text("Edit User")
+    $('#eventName').val(data.event_name)
+    $('#eventDate').val(date)
+    $('#eventTime').val(data.start_time)
+    $('#eventLocation').val(data.location)
+    $('#eventDescription').val(data.description)
+    $('#eventPreviewImage').attr('src', data.image)
+    event_id = data.event_id
 }
 
 function clearUserForm(){
@@ -150,8 +182,8 @@ function buildTemplate(index, data){
     return rows;
 }
 
-async function deleteData(user_id){
-    commonJS.swalConfirmAjax('Are you sure want to delete this data?', 'Yes', 'No', commonJS.exec, {user_id: user_id} , 'POST', '/user/delete', (response)=> {
+async function deleteData(event_id){
+    commonJS.swalConfirmAjax('Are you sure want to delete this data?', 'Yes', 'No', commonJS.exec, {event_id: event_id} , 'POST', '/event/delete', (response)=> {
         if(response.status == 200){
             commonJS.toast(response.message, false)
             search(1)
@@ -276,6 +308,7 @@ async function save(){
 
 $(async function (){
     $('.event-datepicker').val('');
+    $('#eventDate').val('');
     await commonJS.setupPermission("M003");
     await search(initPage)
 });

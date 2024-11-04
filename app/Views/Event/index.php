@@ -37,7 +37,7 @@ $_SESSION['logged_in'] = true;
     <section class="content">
         <div class="container-fluid">
             <div class="container mt-4">
-                <div class="row my-3">
+                <div class="row my-3" id="listEvent" style="display: none;">
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
@@ -65,6 +65,11 @@ $_SESSION['logged_in'] = true;
                                 <div id="eventNotFound" style="display:none;">
                                     <h4>No Data</h4>
                                 </div>
+                                <div class="text-right mb-2">
+                                    <button class="btn btn-sm btn-primary" onclick="add(1)">
+                                    Add Event
+                                    </button>
+                                </div>
                                 <div id="eventData">
                                 </div>
                                 <nav class="mt-2">
@@ -74,7 +79,7 @@ $_SESSION['logged_in'] = true;
                         </div>
                     </div>
                 </div>
-
+                <?php include __DIR__. '/add.php' ?>
             </div>
         </div>
     </section>

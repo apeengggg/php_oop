@@ -73,7 +73,7 @@ switch ($uri){
         $roleMiddleware->handle('M003', 'can_update');
         $eventController->update();
         break;
-    case '/user/delete':
+    case '/event/delete':
         $jwt->handle();
         $roleMiddleware->handle('M003', 'can_delete');
         $eventController->destroy();

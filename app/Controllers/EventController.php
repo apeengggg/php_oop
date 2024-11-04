@@ -178,14 +178,9 @@ class EventController {
     }
 
     public function destroy(){
-        if(!isset($_POST['user_id'])){
-            echo json_encode(['status' => 400, 'message' => 'User Id Required']);
-            return;
-        }
-
         try{
             $rules = [
-                'user_id' => ['required'],
+                'event_id' => ['required'],
             ];
 
             $helper = new Validation();
@@ -195,7 +190,7 @@ class EventController {
                 exit;
             }
 
-            $delete = $this->eventModel->destroy($_POST['user_id']);
+            $delete = $this->eventModel->destroy($_POST['event_id']);
             if($delete){
                 echo json_encode(['status' => 200, 'message'=> 'Success Delete Data']);
             }else{

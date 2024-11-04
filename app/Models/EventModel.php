@@ -115,11 +115,11 @@ class Event {
         }
     }
 
-    public function destroy($user_id){
+    public function destroy($event_id){
         try{
-            $query = "UPDATE " . $this->table . " SET status = 0 WHERE user_id = :user_id";
+            $query = "UPDATE " . $this->table . " SET status = 0 WHERE event_id = :event_id";
             $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':user_id', $user_id);
+            $stmt->bindParam(':event_id', $event_id);
             $stmt->execute();
             return true;
         }catch(\Exception $e){
