@@ -37,4 +37,12 @@ class AuthController{
             echo json_encode(['status' => 400, 'message' => 'Login Failed']);
         } 
     }
+
+    public function notfound(){
+        include __DIR__. '/../Views/Error/404.php';
+    }
+
+    public function forbidden(){
+        include __DIR__. '/../Views/Error/403.php';
+    }
 }

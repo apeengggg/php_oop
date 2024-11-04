@@ -2,6 +2,7 @@
 require_once __DIR__.'/../app/Controllers/AuthController.php';
 require_once __DIR__.'/../app/Controllers/UserController.php';
 require_once __DIR__.'/../app/Middlewares/Jwt.php';
+require_once __DIR__.'/../app/Middlewares/RolesMiddleware.php';
 require_once __DIR__.'/../config/Database.php';
 
 $uri;
@@ -10,6 +11,7 @@ $db = (new Database())->getConnection();
 
 $authController = new AuthController();
 $userController = new UserController($db);
+$roleMiddleware = new RolesMiddleware($db);
 $jwt = new Token();
 
 if(isset($_SERVER['PATH_INFO'])){
@@ -22,32 +24,36 @@ switch ($uri){
     case '/':
         $authController->index();
         break;
+    case '/403':
+        $authController->forbidden();
+        break;
     case '/login/authenticate':
         $authController->login();
-        break;
-    case '/dashboard':
-        include __DIR__. '/../app/Views/Admin/index.php';
         break;
     case '/users':
         $userController->index();
         break;
     case '/users/get':
         $jwt->handle();
+        $roleMiddleware->handle('M001', 'can_read');
         $userController->get();
         break;
     case '/users/post':
         $jwt->handle();
+        $roleMiddleware->handle('M001', 'can_create');
         $userController->store();
         break;
     case '/users/put':
         $jwt->handle();
+        $roleMiddleware->handle('M001', 'can_update');
         $userController->update();
         break;
     case '/user/delete':
         $jwt->handle();
+        $roleMiddleware->handle('M001', 'can_delete');
         $userController->destroy();
         break;
     default:
-        break;
+        $authController->notfound();
     
 }

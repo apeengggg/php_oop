@@ -59,6 +59,10 @@ class CommonJS{
                     commonJS.swalError(response.message, () => {
                         window.location.href = baseUrl
                     })
+                }else if(response.status == 403){
+                    commonJS.swalError(response.message, () => {
+                        window.location.href = baseUrl + '/403'
+                    })
                 }else{
                     if(success){
                         success(response)
@@ -82,6 +86,10 @@ class CommonJS{
                 if(response.status == 401){
                     commonJS.swalError(response.message, () => {
                         window.location.href = baseUrl
+                    })
+                }else if(response.status == 403){
+                    commonJS.swalError(response.message, () => {
+                        window.location.href = baseUrl + '/403'
                     })
                 }else{
                     if(success){
@@ -111,6 +119,10 @@ class CommonJS{
                 if(response.status == 401){
                     commonJS.swalError(response.message, () => {
                         window.location.href = baseUrl
+                    })
+                }else if(response.status == 403){
+                    commonJS.swalError(response.message, () => {
+                        window.location.href = baseUrl + '/403'
                     })
                 }else{
                     if(success){
