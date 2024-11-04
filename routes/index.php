@@ -39,6 +39,10 @@ switch ($uri){
         $jwt->handle();
         $userController->store();
         break;
+    case '/users/put':
+        $jwt->handle();
+        $userController->update();
+        break;
     case '/user/delete':
         $jwt->handle();
         $userController->destroy();

@@ -41,7 +41,6 @@ class CommonJS{
             showLoaderOnConfirm: true,
             allowOutsideClick: () => !Swal.isLoading()
         }).then(async (result) => {
-            console.log("🚀 ~ CommonJS ~ swalConfirmAjax ~ result:", result)
             if(result.isConfirmed){
                 await ajaxMethod(url, data, method, callback)
             }
@@ -56,16 +55,14 @@ class CommonJS{
                 'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
             success: function (response) {
-            console.log("🚀 ~ CommonJS ~ get ~ response:", response)
-
-                if(response.status == 200){
-                    if(success){
-                        success(response)
-                    }
-                }else if(response.status == 401){
+                if(response.status == 401){
                     commonJS.swalError(response.message, () => {
                         window.location.href = baseUrl
                     })
+                }else{
+                    if(success){
+                        success(response)
+                    }
                 }
             }
         });
@@ -82,14 +79,14 @@ class CommonJS{
                 'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
             success: function (response) {
-                if(response.status == 200){
-                    if(success){
-                        success(response)
-                    }
-                }else if(response.status == 401){
+                if(response.status == 401){
                     commonJS.swalError(response.message, () => {
                         window.location.href = baseUrl
                     })
+                }else{
+                    if(success){
+                        success(response)
+                    }
                 }
             },
             error: function (exception){
@@ -111,14 +108,14 @@ class CommonJS{
                 'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
             success: function (response) {
-                if(response.status == 200){
-                    if(success){
-                        success(response)
-                    }
-                }else if(response.status == 401){
+                if(response.status == 401){
                     commonJS.swalError(response.message, () => {
                         window.location.href = baseUrl
                     })
+                }else{
+                    if(success){
+                        success(response)
+                    }
                 }
             },
             error: function (exception) {
@@ -168,6 +165,9 @@ class CommonJS{
             }
 
             if(permission[i].function_id == function_id){
+                $("#pageTitle").text(permission[i].function_name)
+                $("#breadcrumbTitle").text(permission[i].function_name)
+
                 if(permission[i].can_create === "0"){
                     $("#btnAdd").remove()
                 }

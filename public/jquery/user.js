@@ -3,6 +3,7 @@ var initPage = 1;
 var perPagePages = 10;
 var dir = 'asc';
 var isEdit = false;
+var user_id = '';
 
 $('#imageInput').change(function(event) {
     var file = event.target.files[0];
@@ -38,6 +39,7 @@ function editData(data){
     $('#profileImage').attr('src', data.image)
     $('#userRole').val(data.role_id)
     $('#passwordForm').hide()
+    user_id = data.user_id
 }
 
 function clearUserForm(){
@@ -51,6 +53,7 @@ function clearUserForm(){
     $('#imageInput').val('')
     $('#passwordForm').show()
     $('#profileImage').attr('src', '../public/img/common.png');
+    user_id = ''
 }
 
 function changeImage(){
@@ -97,6 +100,7 @@ function renderPagination(totalPages, currentPage) {
 }
 
 function buildTemplate(index, data){
+    console.log("🚀 ~ buildTemplate ~ data:", data)
     var rows = ""
     var string = JSON.stringify(data[index])
     var button = `
@@ -187,7 +191,7 @@ async function save(){
         error.push("Role Required")
     }
 
-    if(password == ''){
+    if(password == '' && !isEdit){
         error.push("Password Required")
     }
 
@@ -200,14 +204,20 @@ async function save(){
     formData.append("name", name)
     formData.append("username", username)
     formData.append("role", role)
-    formData.append("password", password)
+    if(!isEdit){
+        formData.append("password", password)
+    }else{
+        formData.append("user_id", user_id)
+    }
     
     if($('#imageInput')[0].files[0]){
         // console.log("🚀 ~ save ~ $('#imageInput')[0].files[0]:", $('#imageInput')[0].files[0])
         formData.append("image", $('#imageInput')[0].files[0])
     }
 
-    commonJS.swalConfirmAjax("Do you want to save this data?", "Yes", "No", commonJS.execUpload, formData, 'POST', '/users/post', async (response) => {
+    let url = isEdit ? '/users/put' : '/users/post'
+
+    commonJS.swalConfirmAjax("Do you want to save this data?", "Yes", "No", commonJS.execUpload, formData, 'POST', url, async (response) => {
         console.log("🚀 ~ commonJS.execUpload ~ response:", response)
         if(response.status == 200){
             commonJS.toast(response.message, false)

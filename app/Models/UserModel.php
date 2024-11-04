@@ -89,6 +89,25 @@ class User {
         }
     }
 
+    public function update($body, $filename){
+        try{
+            $query = "UPDATE ". $this->table . " SET name = :name, username = :username, role_id = :role_id, image = :image WHERE user_id = :user_id";
+            $stmt = $this->conn->prepare($query);
+
+            $stmt->bindParam(':user_id', $body['user_id']);
+            $stmt->bindParam(':name', $body['name']);
+            $stmt->bindParam(':username', $body['username']);
+            $stmt->bindParam(':image', $filename);
+            $stmt->bindParam(':role_id', $body['role']);
+
+            $stmt->execute();
+            return true;
+        }catch(\Exception $e){
+            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            exit;
+        }
+    }
+
     public function destroy($user_id){
         try{
             $query = "UPDATE " . $this->table . " SET status = 0 WHERE user_id = :user_id";
@@ -96,6 +115,33 @@ class User {
             $stmt->bindParam(':user_id', $user_id);
             $stmt->execute();
             return true;
+        }catch(\Exception $e){
+            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            exit;
+        }
+    }
+
+    public function findUserByUserId($user_id){
+        try{
+            $query = "SELECT user_id, username, image FROM " . $this->table . " WHERE user_id = :user_id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':user_id', $user_id);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }catch(\Exception $e){
+            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            exit;
+        }
+    }
+
+    public function findUserByUsername($username, $user_id){
+        try{
+            $query = "SELECT username FROM " . $this->table . " WHERE username = :username AND user_id <> :user_id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':username', $username);
+            $stmt->bindParam(':user_id', $user_id);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         }catch(\Exception $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
