@@ -1,6 +1,7 @@
 <?php 
 
 require_once __DIR__.'/../Models/UserModel.php';
+require_once __DIR__.'/../Helpers/Validation.php';
 
 class UserController {
     private $userModel;
@@ -17,6 +18,21 @@ class UserController {
     public function get(){
         $param = $_GET;
         try{
+
+            $rules = [
+                'page' => ['required', 'numeric'],
+                'perPage' => ['required', 'numeric'],
+                'orderBy' => ['required'],
+                'dir' => ['required', 'equal:asc|desc'],
+            ];
+
+            $helper = new Validation();
+            $validate = $helper->validate($param, $rules);
+            if(!empty($validate)){
+                echo json_encode(['status' => 400, 'message' => $validate]);
+                exit;
+            }
+
             $results = $this->userModel->all($param);
             $totalPages = $results['totalPages'];
             $data = $results['data'];
@@ -35,6 +51,20 @@ class UserController {
         $body = $_POST;
         $filename = '';
         try{
+            $rules = [
+                'username' => ['required'],
+                'name' => ['required'],
+                'password' => ['required'],
+                'role' => ['required'],
+            ];
+
+            $helper = new Validation();
+            $validate = $helper->validate($body, $rules);
+            if(!empty($validate)){
+                echo json_encode(['status' => 400, 'message' => $validate]);
+                exit;
+            }
+
             if(!empty($_FILES) || isset($_FILES['image'])){
                 $file = $_FILES['image'];
 
@@ -76,6 +106,20 @@ class UserController {
         $body = $_POST;
         $filename = '';
         try{
+            $rules = [
+                'user_id' => ['required'],
+                'username' => ['required'],
+                'name' => ['required'],
+                'role' => ['required'],
+            ];
+
+            $helper = new Validation();
+            $validate = $helper->validate($body, $rules);
+            if(!empty($validate)){
+                echo json_encode(['status' => 400, 'message' => $validate]);
+                exit;
+            }
+
             $user = $this->userModel->findUserByUserId($body['user_id']);
 
             if(empty($user)){
@@ -140,6 +184,17 @@ class UserController {
         }
 
         try{
+            $rules = [
+                'user_id' => ['required'],
+            ];
+
+            $helper = new Validation();
+            $validate = $helper->validate($_POST, $rules);
+            if(!empty($validate)){
+                echo json_encode(['status' => 400, 'message' => $validate]);
+                exit;
+            }
+
             $delete = $this->userModel->destroy($_POST['user_id']);
             if($delete){
                 echo json_encode(['status' => 200, 'message'=> 'Success Delete Data']);

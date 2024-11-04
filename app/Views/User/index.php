@@ -55,9 +55,15 @@ $_SESSION['logged_in'] = true;
                                 <table id="userData" class="table table-striped table-hover text-center" style="width:100%">
                                     <thead>
                                         <tr>
-                                            <th onclick="orderDynamically('name')">Name</th>
-                                            <th onclick="orderDynamically('username')">Username</th>
-                                            <th onclick="orderDynamically('role_name')">Role</th>
+                                            <th onclick="orderDynamically('name')">
+                                                Name
+                                            </th>
+                                            <th onclick="orderDynamically('username')">
+                                                Username
+                                            </th>
+                                            <th onclick="orderDynamically('role_name')">
+                                                Role
+                                            </th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>

@@ -154,7 +154,6 @@ async function search(page){
         param += `&username=${$('#filterUsername').val()}`
     }
 
-    console.log("🚀 ~ search ~ $('#filterRole').val():", $('#filterRole').val())
     if($('#filterRole').val()){
         param += `&role=${$('#filterRole').val()}`
     }
@@ -179,6 +178,8 @@ async function search(page){
                 console.log("🚀 ~ commonJS.get ~ rows:", rows)
                 $("#userData>tbody").append(rows);
             }
+        }else{
+            commonJS.toast(response.message, true)
         }
     }, (error) => {
         console.error(error)
@@ -246,6 +247,6 @@ async function save(){
 }
 
 $(async function (){
-    await search(initPage)
     await commonJS.setupPermission("M001");
+    await search(initPage)
 });
