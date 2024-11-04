@@ -52,10 +52,11 @@ class EventController {
         $filename = '';
         try{
             $rules = [
-                'username' => ['required'],
-                'name' => ['required'],
-                'password' => ['required'],
-                'role' => ['required'],
+                'eventName' => ['required'],
+                'eventDate' => ['required'],
+                'eventTime' => ['required'],
+                'eventLocation' => ['required'],
+                'eventDescription' => ['required'],
             ];
 
             $helper = new Validation();
@@ -107,10 +108,12 @@ class EventController {
         $filename = '';
         try{
             $rules = [
-                'user_id' => ['required'],
-                'username' => ['required'],
-                'name' => ['required'],
-                'role' => ['required'],
+                'event_id' => ['required'],
+                'eventName' => ['required'],
+                'eventDate' => ['required'],
+                'eventTime' => ['required'],
+                'eventLocation' => ['required'],
+                'eventDescription' => ['required'],
             ];
 
             $helper = new Validation();
@@ -120,16 +123,10 @@ class EventController {
                 exit;
             }
 
-            $user = $this->eventModel->findUserByUserId($body['user_id']);
+            $event = $this->eventModel->findEventByEventId($body['event_id']);
 
-            if(empty($user)){
-                echo json_encode(['status' => 400, 'message'=> 'User Not Found']);
-                exit;
-            }
-
-            $username_unique = $this->eventModel->findUserByUsername($body['username'], $body['user_id']);
-            if($username_unique){
-                echo json_encode(['status' => 400, 'message'=> 'Username already exists!']);
+            if(empty($event)){
+                echo json_encode(['status' => 400, 'message'=> 'Event Not Found']);
                 exit;
             }
 
@@ -149,10 +146,10 @@ class EventController {
                     mkdir($uploadDir, 0755, true);
                 }
 
-                $userImage = preg_replace('/^\.\.\//', '', $user['image']);
+                $eventImage = preg_replace('/^\.\.\//', '', $event['image']);
 
-                if(file_exists($userImage)){
-                    if(!unlink($userImage)){
+                if(file_exists($eventImage)){
+                    if(!unlink($eventImage)){
                         echo json_encode(['status' => 400, 'message'=> 'Failed Change Image']);
                         exit;
                     }
@@ -167,11 +164,11 @@ class EventController {
             }
 
             if($filename === ''){
-                $filename = $user['image'];
+                $filename = $event['image'];
             }
 
             $this->eventModel->update($body, $filename);
-            echo json_encode(['status' => 200, 'message'=> 'Success Update User']);
+            echo json_encode(['status' => 200, 'message'=> 'Success Update Event']);
         }catch(\Exception $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
         }

@@ -41,13 +41,7 @@ function add(isAdd){
         $("#listEvent").hide()
         $("#addEvent").show()
     }
-    $("#eventName").val('')
-    $("#eventDate").val('')
-    $("#eventTime").val('')
-    $("#eventLocation").val('')
-    $("#eventDescription").val('')
-    $("#eventImage").val('')
-    $("#previewEventImage").attr('src', '../public/img/common_event.png');
+    clearEventForm()
 }
 
 async function orderDynamically(value){
@@ -66,9 +60,8 @@ async function changePerPage(perPage){
 }
 
 function editData(data){
-    isEdit = true
-
     add(1)
+    isEdit = true
 
     let date = moment(data.date).format('DD/MM/YYYY')
 
@@ -78,22 +71,22 @@ function editData(data){
     $('#eventTime').val(data.start_time)
     $('#eventLocation').val(data.location)
     $('#eventDescription').val(data.description)
-    $('#eventPreviewImage').attr('src', data.image)
+    $('#previewEventImage').attr('src', data.image)
     event_id = data.event_id
 }
 
-function clearUserForm(){
+function clearEventForm(){
     isEdit = false
-    var title = isEdit ? "Edit User" : "Add User"
-    $('#userFormTitle').text(title)
-    $('#userName').val('')
-    $('#userUsername').val('')
-    $('#userRole').val('')
-    $('#userPassword').val('')
-    $('#imageInput').val('')
-    $('#passwordForm').show()
-    $('#profileImage').attr('src', '../public/img/common.png');
-    user_id = ''
+    var title = isEdit ? "Edit Event" : "Add Event"
+    $('#titleForm').text(title)
+    $('#eventName').val('')
+    $('#eventDate').val('')
+    $('#eventTime').val('')
+    $('#eventLocation').val('')
+    $('#eventDescription').val('')
+    $('#previewEventImage').attr('src', '../public/img/common_event.png')
+    $('#eventImage').val('');
+    event_id = ''
 }
 
 function clearFilter(){
@@ -249,55 +242,60 @@ async function search(page){
 
 async function save(){
     $('#userFormErrorMessage').hide();
-    var name = $('#userName').val()
-    var username = $('#userUsername').val()
-    var role = $('#userRole').val()
-    var password = $('#userPassword').val()
+    var eventName = $('#eventName').val()
+    var eventDate = $('#eventDate').val()
+    var eventTime = $('#eventTime').val()
+    var eventLocation = $('#eventLocation').val()
+    var eventDescription = $('#eventDescription').val()
+    var eventImage = $('#eventImage').val()
 
     var error = []
-    if(name == ''){
-        error.push("Name Required")
+    if(eventName == ''){
+        error.push("Event Name Required")
     }
 
-    if(username == ''){
-        error.push("Username Required")
+    if(eventDate == ''){
+        error.push("Event Date Required")
     }
 
-    if(role == ''){
-        error.push("Role Required")
+    if(eventTime == ''){
+        error.push("Event Time Required")
     }
 
-    if(password == '' && !isEdit){
-        error.push("Password Required")
+    if(eventLocation == ''){
+        error.push("Event Location Required")
+    }
+    if(eventDescription == ''){
+        error.push("Event Description Required")
     }
 
     if(error.length > 0){
-        $('#userFormErrorMessage').text(error.toString()).show();
+        $('#eventErrorForm').text(error.toString()).show();
         return;
     }
 
     var formData = new FormData()
-    formData.append("name", name)
-    formData.append("username", username)
-    formData.append("role", role)
-    if(!isEdit){
-        formData.append("password", password)
-    }else{
-        formData.append("user_id", user_id)
+    formData.append("eventName", eventName)
+    formData.append("eventDate", moment(eventDate).format('YYYY-DD-MM'))
+    formData.append("eventTime", eventTime)
+    formData.append("eventLocation", eventLocation)
+    formData.append("eventDescription", eventDescription)
+    if(isEdit){
+        formData.append("event_id", event_id)
     }
     
-    if($('#imageInput')[0].files[0]){
-        // console.log("🚀 ~ save ~ $('#imageInput')[0].files[0]:", $('#imageInput')[0].files[0])
-        formData.append("image", $('#imageInput')[0].files[0])
+    if($('#eventImage')[0].files[0]){
+        formData.append("image", $('#eventImage')[0].files[0])
     }
 
-    let url = isEdit ? '/users/put' : '/users/post'
+    let url = isEdit ? '/event/put' : '/event/post'
 
     commonJS.swalConfirmAjax("Do you want to save this data?", "Yes", "No", commonJS.execUpload, formData, 'POST', url, async (response) => {
         console.log("🚀 ~ commonJS.execUpload ~ response:", response)
         if(response.status == 200){
+            isEdit = false
             commonJS.toast(response.message, false)
-            await clearUserForm()
+            await add(0)
             await search(1)
         }else{
             commonJS.toast(response.message, true)

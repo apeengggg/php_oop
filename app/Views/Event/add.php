@@ -46,8 +46,8 @@
             </div>
             <div class="card-footer">
                 <div class="text-right mt-2">
-                    <button type="button" class="btn btn-danger">Clear</button>
-                    <button type="button" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-danger" onclick="clearEventForm()">Clear</button>
+                    <button type="button" class="btn btn-primary" onclick="save()">Save</button>
                 </div>
 
             </div>

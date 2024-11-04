@@ -75,18 +75,17 @@ class Event {
 
     public function store($body, $filename){
         try{
-            $user_id = uniqid();
-            $query = "INSERT INTO m_users (user_id, name, username, password, role_id, image) VALUES (:user_id, :name, :username, :pass, :role_id, :image)";
+            $event_id = uniqid();
+            $query = "INSERT INTO ".$this->table. " (event_id, event_name, location, date, start_time, description, image) VALUES (:event_id, :event_name, :location, :date, :time, :description, :image)";
             $stmt = $this->conn->prepare($query);
 
-            $hashedPassword = password_hash($body['password'], PASSWORD_BCRYPT);
-
-            $stmt->bindParam(':user_id', $user_id);
-            $stmt->bindParam(':name', $body['name']);
-            $stmt->bindParam(':username', $body['username']);
-            $stmt->bindParam(':pass', $hashedPassword);
+            $stmt->bindParam(':event_id', $event_id);
+            $stmt->bindParam(':event_name', $body['eventName']);
+            $stmt->bindParam(':location', $body['eventLocation']);
+            $stmt->bindParam(':date', $body['eventDate']);
+            $stmt->bindParam(':time', $body['eventTime']);
+            $stmt->bindParam(':description', $body['eventDescription']);
             $stmt->bindParam(':image', $filename);
-            $stmt->bindParam(':role_id', $body['role']);
 
             $stmt->execute();
             return true;
@@ -98,14 +97,16 @@ class Event {
 
     public function update($body, $filename){
         try{
-            $query = "UPDATE ". $this->table . " SET name = :name, username = :username, role_id = :role_id, image = :image WHERE user_id = :user_id";
+            $query = "UPDATE ". $this->table . " SET event_name = :event_name, location = :location, date = :date, start_time = :start_time, description = :description, image = :image WHERE event_id = :event_id";
             $stmt = $this->conn->prepare($query);
 
-            $stmt->bindParam(':user_id', $body['user_id']);
-            $stmt->bindParam(':name', $body['name']);
-            $stmt->bindParam(':username', $body['username']);
+            $stmt->bindParam(':event_id', $body['event_id']);
+            $stmt->bindParam(':event_name', $body['eventName']);
+            $stmt->bindParam(':location', $body['eventLocation']);
+            $stmt->bindParam(':date', $body['eventDate']);
+            $stmt->bindParam(':start_time', $body['eventTime']);
+            $stmt->bindParam(':description', $body['eventDescription']);
             $stmt->bindParam(':image', $filename);
-            $stmt->bindParam(':role_id', $body['role']);
 
             $stmt->execute();
             return true;
@@ -128,11 +129,12 @@ class Event {
         }
     }
 
-    public function findUserByUserId($user_id){
+
+    public function findEventByEventId($event_id){
         try{
-            $query = "SELECT user_id, username, image FROM " . $this->table . " WHERE user_id = :user_id";
+            $query = "SELECT event_id, image FROM " . $this->table . " WHERE event_id = :event_id";
             $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':user_id', $user_id);
+            $stmt->bindParam(':event_id', $event_id);
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }catch(\Exception $e){

@@ -1,3 +1,4 @@
 vendor/
 .env
 public/img/profile/
+public/img/events/
