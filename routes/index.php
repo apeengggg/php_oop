@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__.'/../app/Controllers/AuthController.php';
 require_once __DIR__.'/../app/Controllers/UserController.php';
+require_once __DIR__.'/../app/Controllers/EventController.php';
 require_once __DIR__.'/../app/Middlewares/Jwt.php';
 require_once __DIR__.'/../app/Middlewares/RolesMiddleware.php';
 require_once __DIR__.'/../config/Database.php';
@@ -11,6 +12,7 @@ $db = (new Database())->getConnection();
 
 $authController = new AuthController();
 $userController = new UserController($db);
+$eventController = new EventController($db);
 $roleMiddleware = new RolesMiddleware($db);
 $jwt = new Token();
 
@@ -52,6 +54,29 @@ switch ($uri){
         $jwt->handle();
         $roleMiddleware->handle('M001', 'can_delete');
         $userController->destroy();
+        break;
+    case '/events':
+        $eventController->index();
+        break;
+    case '/event/get':
+        $jwt->handle();
+        $roleMiddleware->handle('M003', 'can_read');
+        $eventController->get();
+        break;
+    case '/event/post':
+        $jwt->handle();
+        $roleMiddleware->handle('M003', 'can_create');
+        $eventController->store();
+        break;
+    case '/event/put':
+        $jwt->handle();
+        $roleMiddleware->handle('M003', 'can_update');
+        $eventController->update();
+        break;
+    case '/user/delete':
+        $jwt->handle();
+        $roleMiddleware->handle('M003', 'can_delete');
+        $eventController->destroy();
         break;
     default:
         $authController->notfound();

@@ -154,6 +154,7 @@ class CommonJS{
     }
 
     setupPermission(function_id){
+        console.log("🚀 ~ CommonJS ~ setupPermission ~ function_id:", function_id)
         var data = JSON.parse(sessionStorage.getItem("data"))
         var permission = data.permission
         var master = []
