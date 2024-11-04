@@ -5,6 +5,14 @@ var dir = 'asc';
 var isEdit = false;
 var user_id = '';
 
+$('.event-datepicker').daterangepicker({
+    singleDatePicker: false,
+    showDropdowns: true,
+    locale: {
+        format: 'DD/MM/YYYY'
+    }
+});
+
 $('#imageInput').change(function(event) {
     var file = event.target.files[0];
     if (file) {
@@ -57,9 +65,9 @@ function clearUserForm(){
 }
 
 function clearFilter(){
-    $('#filterName').val('')
-    $('#filterUsername').val('')
-    $('#filterRole').val('')
+    $('#filterEventName').val('')
+    $('#filterLocation').val('')
+    $('#filterDate').val('')
     search(1)
 }
 
@@ -129,8 +137,8 @@ function buildTemplate(index, data){
                 <p class="card-text">${data[index].description}</p>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">Tanggal: ${date}</li>
-                <li class="list-group-item">Waktu: ${time}</li>
+                <li class="list-group-item">Date: ${date}</li>
+                <li class="list-group-item">Time: ${time}</li>
                 <li class="list-group-item">${data[index].location}</li>
             </ul>
             <div class="card-body text-right">
@@ -163,6 +171,19 @@ async function search(page){
 
     if($('#filterLocation').val()){
         param += `&location=${$('#filterLocation').val()}`
+    }
+
+    console.log("🚀 ~ search ~ $('#filterDate').val():", $('#filterDate').val())
+    if($('#filterDate').val()){
+        let date = $('#filterDate').val()
+        date = date.split('-')
+        date[0] = date[0].replace(/ /g,'')
+        date[1] = date[1].replace(/ /g,'')
+
+        date[0] = moment(date[0]).format('YYYY-MM-DD')
+        date[1] = moment(date[1]).format('YYYY-MM-DD')
+
+        param += `&date_start=${date[0]}&date_end=${date[1]}`
     }
 
     $(".template-data").remove()
@@ -254,6 +275,7 @@ async function save(){
 }
 
 $(async function (){
+    $('.event-datepicker').val('');
     await commonJS.setupPermission("M003");
     await search(initPage)
 });

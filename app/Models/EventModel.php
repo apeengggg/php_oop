@@ -33,10 +33,11 @@ class Event {
             $params[':location'] = '%' . $param['location'] . '%';
         }
 
-        if (!empty($param['single_date'])) {
-            $query .= ' AND date = :date ';
-            $countQuery .= ' AND date = :date ';
-            $params[':date'] = $param['single_date'];
+        if (!empty($param['date_start']) && !empty($param['date_end'])) {
+            $query .= ' AND date BETWEEN :date_start AND :date_end ';
+            $countQuery .= ' AND date BETWEEN :date_start AND :date_end ';
+            $params[':date_start'] = $param['date_start'];
+            $params[':date_end'] = $param['date_end'];
         }
 
         if(!empty($param['orderBy'])) {
