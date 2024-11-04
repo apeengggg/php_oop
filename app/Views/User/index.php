@@ -101,4 +101,7 @@ $_SESSION['logged_in'] = true;
         </div>
     </section>
 </div>
+
+<?php include __DIR__. '../../templates/jquery.php' ?>
+<script src="../public/jquery/user.js"></script>
 <?php include __DIR__. '../../templates/footer.php' ?>
