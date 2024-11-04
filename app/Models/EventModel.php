@@ -2,7 +2,7 @@
 
 class Event {
     private $conn;
-    private $table = "m_users";
+    private $table = "m_events";
 
     public function __construct($db) {
         $this->conn = $db;
@@ -14,31 +14,29 @@ class Event {
     public function all($param) {
         $params = [];
 
-        $query = "SELECT name, username, user_id, role_name, m_users.role_id, image FROM " . $this->table;
+        $query = "SELECT m_events.*, image FROM " . $this->table;
 
         $countQuery = "SELECT COUNT(*) as total FROM ". $this->table;
-        
-        $query .= ' INNER JOIN m_roles ON m_users.role_id = m_roles.role_id ';
 
         $query .= ' WHERE 1=1 AND status = 1 ';
         $countQuery .= ' WHERE 1=1 AND status = 1 ';
 
-        if (!empty($param['username'])) {
-            $query .= ' AND LOWER(username) LIKE LOWER(:username) ';
-            $countQuery .= ' AND LOWER(username) LIKE LOWER(:username) ';
-            $params[':username'] = '%' . $param['username'] . '%';
-        }
-        
-        if (!empty($param['name'])) {
-            $query .= ' AND LOWER(name) LIKE LOWER(:name) ';
-            $countQuery .= ' AND LOWER(name) LIKE LOWER(:name) ';
-            $params[':name'] = '%' . $param['name'] . '%';
+        if (!empty($param['event_name'])) {
+            $query .= ' AND LOWER(event_name) LIKE LOWER(:event_name) ';
+            $countQuery .= ' AND LOWER(event_name) LIKE LOWER(:event_name) ';
+            $params[':event_name'] = '%' . $param['event_name'] . '%';
         }
 
-        if (!empty($param['role'])) {
-            $query .= ' AND m_users.role_id = :role ';
-            $countQuery .= ' AND m_users.role_id = :role ';
-            $params[':role'] = $param['role'];
+        if (!empty($param['location'])) {
+            $query .= ' AND LOWER(location) LIKE LOWER(:location) ';
+            $countQuery .= ' AND LOWER(location) LIKE LOWER(:location) ';
+            $params[':location'] = '%' . $param['location'] . '%';
+        }
+
+        if (!empty($param['single_date'])) {
+            $query .= ' AND date = :date ';
+            $countQuery .= ' AND date = :date ';
+            $params[':date'] = $param['single_date'];
         }
 
         if(!empty($param['orderBy'])) {
@@ -49,7 +47,9 @@ class Event {
         $limit = isset($param['perPage']) && is_numeric($param['perPage']) ? (int)$param['perPage'] : 10; // Default limit is 10
         $offset = ($page - 1) * $limit;
 
+        
         $query .= ' LIMIT :limit OFFSET :offset ';
+        // var_dump($query);
 
         $stmt = $this->conn->prepare($query);
         $stmtCount = $this->conn->prepare($countQuery);

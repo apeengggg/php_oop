@@ -1,6 +1,6 @@
-var orderBy = 'user_id'
+var orderBy = 'event_id'
 var initPage = 1;
-var perPagePages = 10;
+var perPagePages = 3;
 var dir = 'asc';
 var isEdit = false;
 var user_id = '';
@@ -107,26 +107,37 @@ function renderPagination(totalPages, currentPage) {
 }
 
 function buildTemplate(index, data){
-    console.log("🚀 ~ buildTemplate ~ data:", data)
     var rows = ""
     var string = JSON.stringify(data[index])
+
+    let date = moment(data[index].date).format('DD MMMM YYYY')
+    let time = data[index].start_time.slice(0, 5) + " WIB";
+
     var button = `
     <button id="btnEdit${index+1}" class='btn btn-sm btn-primary' onclick='editData(${string})'>
         <i class='fas fa-edit'></i>
     </button>
-    <button id="btnDelete${index+1}" class='btn btn-sm btn-danger ml-2' onclick='deleteData("${data[index].user_id}")'>
+    <button id="btnDelete${index+1}" class='btn btn-sm btn-danger ml-2' onclick='deleteData("${data[index].event_id}")'>
         <i class='fas fa-trash'></i>
     </button>
     `
-    rows += '<tr class="template-data">'
-        rows += '<td style="text-align: left;">' 
-            rows += `<img src="${data[index].image}" alt="Profile Image" class="img-thumbnail" style="width: 50px; height: 50px; margin-right: 8px;">`
-            rows += data[index].name
-        rows += '</td>'
-        rows += '<td>'+ data[index].username +'</td>'
-        rows += '<td>'+ data[index].role_name +'</td>'
-        rows += '<td>'+ button +'</td>'
-    rows += '</tr>'
+    rows += `
+        <div class="card template-data" style="width: 18rem;">
+            <img src="${data[index].image}" class="card-img-top" alt="${data[index].event_name}">
+            <div class="card-body">
+                <h4>${data[index].event_name}</h4>
+                <p class="card-text">${data[index].description}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Tanggal: ${date}</li>
+                <li class="list-group-item">Waktu: ${time}</li>
+                <li class="list-group-item">${data[index].location}</li>
+            </ul>
+            <div class="card-body text-right">
+                ${button}
+            </div>
+        </div>
+    `
 
     return rows;
 }
@@ -146,27 +157,23 @@ async function search(page){
     commonJS.loading(true)
     let param = `?orderBy=${orderBy}&dir=${dir}&page=${page}&perPage=${perPagePages}`;
 
-    if($('#filterName').val()){
-        param += `&name=${$('#filterName').val()}`
+    if($('#filterEventName').val()){
+        param += `&event_name=${$('#filterEventName').val()}`
     }
 
-    if($('#filterUsername').val()){
-        param += `&username=${$('#filterUsername').val()}`
-    }
-
-    if($('#filterRole').val()){
-        param += `&role=${$('#filterRole').val()}`
+    if($('#filterLocation').val()){
+        param += `&location=${$('#filterLocation').val()}`
     }
 
     $(".template-data").remove()
-    $('#userNotFound').show()
+    $('#eventNotFound').show()
     const pagination = document.getElementById('pagination');
     pagination.innerHTML = '';
-    await commonJS.get('/users/get'+param, async (response)=> {
+    await commonJS.get('/event/get'+param, async (response)=> {
         console.log("🚀 ~ commonJS.get ~ response:", response)
         if(response.status == 200){
             if(response.data.length > 0){
-                $('#userNotFound').hide()
+                $('#eventNotFound').hide()
                 var rows = ''
 
                 rows = await Promise.all(
@@ -176,7 +183,7 @@ async function search(page){
                 await renderPagination(response.totalPages, page)
 
                 console.log("🚀 ~ commonJS.get ~ rows:", rows)
-                $("#userData>tbody").append(rows);
+                $("#eventData").append(rows);
             }
         }else{
             commonJS.toast(response.message, true)
@@ -247,7 +254,6 @@ async function save(){
 }
 
 $(async function (){
-    alert("M003")
     await commonJS.setupPermission("M003");
     await search(initPage)
 });
