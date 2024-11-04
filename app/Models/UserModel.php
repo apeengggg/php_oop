@@ -24,15 +24,21 @@ class User {
         $countQuery .= ' WHERE 1=1 AND status = 1 ';
 
         if (!empty($param['username'])) {
-            $query .= ' AND username = :username ';
-            $countQuery .= ' AND username = :username ';
-            $params[':username'] = $param['username'];
+            $query .= ' AND LOWER(username) LIKE LOWER(:username) ';
+            $countQuery .= ' AND LOWER(username) LIKE LOWER(:username) ';
+            $params[':username'] = '%' . $param['username'] . '%';
         }
         
         if (!empty($param['name'])) {
-            $query .= ' AND name = :name ';
-            $countQuery .= ' AND name = :name ';
-            $params[':name'] = $param['name'];
+            $query .= ' AND LOWER(name) LIKE LOWER(:name) ';
+            $countQuery .= ' AND LOWER(name) LIKE LOWER(:name) ';
+            $params[':name'] = '%' . $param['name'] . '%';
+        }
+
+        if (!empty($param['role'])) {
+            $query .= ' AND m_users.role_id = :role ';
+            $countQuery .= ' AND m_users.role_id = :role ';
+            $params[':role'] = $param['role'];
         }
 
         if(!empty($param['orderBy'])) {

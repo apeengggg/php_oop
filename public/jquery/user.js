@@ -56,6 +56,13 @@ function clearUserForm(){
     user_id = ''
 }
 
+function clearFilter(){
+    $('#filterName').val('')
+    $('#filterUsername').val('')
+    $('#filterRole').val('')
+    search(1)
+}
+
 function changeImage(){
     $('#imageInput').click();
 }
@@ -139,17 +146,25 @@ async function search(page){
     commonJS.loading(true)
     let param = `?orderBy=${orderBy}&dir=${dir}&page=${page}&perPage=${perPagePages}`;
 
-    if($('#usernameFilter').val()){
-        param += `&username=${$('#usernameFilter').val()}`
+    if($('#filterName').val()){
+        param += `&name=${$('#filterName').val()}`
     }
 
-    if($('#name').val()){
-        param += `&name=${$('#name').val()}`
+    if($('#filterUsername').val()){
+        param += `&username=${$('#filterUsername').val()}`
+    }
+
+    console.log("🚀 ~ search ~ $('#filterRole').val():", $('#filterRole').val())
+    if($('#filterRole').val()){
+        param += `&role=${$('#filterRole').val()}`
     }
 
     $(".template-data").remove()
+    $('#userNotFound').show()
+    const pagination = document.getElementById('pagination');
+    pagination.innerHTML = '';
     await commonJS.get('/users/get'+param, async (response)=> {
-        // console.log("🚀 ~ commonJS.get ~ response:", response)
+        console.log("🚀 ~ commonJS.get ~ response:", response)
         if(response.status == 200){
             if(response.data.length > 0){
                 $('#userNotFound').hide()

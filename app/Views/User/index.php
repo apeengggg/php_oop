@@ -28,28 +28,54 @@ $_SESSION['logged_in'] = true;
             <div class="container mt-4">
                 <div class="row my-3">
                     <div class="col-md-8">
-                        <table id="userData" class="table table-striped table-hover text-center" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th onclick="orderDynamically('name')">Name</th>
-                                    <th onclick="orderDynamically('username')">Username</th>
-                                    <th onclick="orderDynamically('role_name')">Role</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr id="userNotFound">
-                                    <td colspan="4">Not Found</td>
-                                </tr>
-                                <tr id="loading">
-                                    <td colspan="4">Loading</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <nav>
-                            <ul id="pagination" class="pagination justify-content-end"></ul>
-                            </ul>
-                        </nav>
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Filter User</h5>
+                                <div class="row">
+                                    <div class="col">
+                                        <input type="text" class="form-control" id="filterName" placeholder="Name">
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" class="form-control" id="filterUsername" placeholder="Username">
+                                    </div>
+                                    <div class="col">
+                                    <select name="role" id="filterRole" class="form-control">
+                                            <option value="">-- Choose Role --</option>
+                                            <option value="1">Super Admin</option>
+                                            <option value="2">User</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-end mt-2">
+                                    <button class="btn btn-sm btn-danger mr-2" onclick="clearFilter()">Clear</button>
+                                    <button class="btn btn-sm btn-primary" onclick="search(1)">Search</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table id="userData" class="table table-striped table-hover text-center" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th onclick="orderDynamically('name')">Name</th>
+                                            <th onclick="orderDynamically('username')">Username</th>
+                                            <th onclick="orderDynamically('role_name')">Role</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr id="userNotFound">
+                                            <td colspan="4">Not Found</td>
+                                        </tr>
+                                        <tr id="loading">
+                                            <td colspan="4">Loading</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <nav class="mt-2">
+                                    <ul id="pagination" class="pagination justify-content-end"></ul>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-4">
                         <form action="POST" enctype="multipart/form-data">
