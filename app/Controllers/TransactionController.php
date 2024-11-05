@@ -1,14 +1,17 @@
 <?php 
 
 require_once __DIR__.'/../Models/TransactionModel.php';
+require_once __DIR__.'/../Helpers/Response.php';
 require_once __DIR__.'/../Helpers/Validation.php';
 
 class TransactionController {
     private $trModel;
+    private $response;
 
     public function __construct($db)
     {
         $this->trModel = new Transaction($db);
+        $this->response = new Response();
     }
 
     public function index(){
@@ -33,7 +36,7 @@ class TransactionController {
             $helper = new Validation();
             $validate = $helper->validate($param, $rules);
             if(!empty($validate)){
-                echo json_encode(['status' => 400, 'message' => $validate]);
+                echo $this->response->BadRequest($validate);
                 exit;
             }
 
@@ -42,10 +45,9 @@ class TransactionController {
             $data = $results['data'];
 
             header('Content-Type: application/json');
-            echo json_encode(['status' => 200, 'data'=> $data, 'totalPages'=> $totalPages, 'message'=> 'Success Get Data']);
+            echo $this->response->OkPaging($data, "Success Get Data", $totalPages);
         }catch(\Exception $e){
-            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
-
+            echo $this->response->InternalServerError($e->getMessage());
         }
     }
 
@@ -66,7 +68,7 @@ class TransactionController {
             $helper = new Validation();
             $validate = $helper->validate($body, $rules);
             if(!empty($validate)){
-                echo json_encode(['status' => 400, 'message' => $validate]);
+                echo $this->response->BadRequest($validate);
                 exit;
             }
 
@@ -74,7 +76,7 @@ class TransactionController {
                 $file = $_FILES['image'];
 
                 if ($file['error'] !== UPLOAD_ERR_OK) {
-                    echo json_encode(['status' => 400, 'message'=> 'Error Uploading Image']);
+                    echo $this->response->BadRequest("Error Uploading Image");
                     exit;
                 }
 
@@ -89,7 +91,7 @@ class TransactionController {
                 if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
                     $filename = '../'.$uploadDir.$uniqueName;
                 } else {
-                    echo json_encode(['status' => 400, 'message'=> 'Error Uploading Image']);
+                    echo $this->response->BadRequest("Error Uploading Image");
                     exit;
                 } 
             }
@@ -99,9 +101,9 @@ class TransactionController {
             }
 
             $this->trModel->store($body, $filename);
-            echo json_encode(['status' => 200, 'message'=> 'Success Create User']);
+            echo $this->response->Success("Success Create User");
         }catch(\Exception $e){
-            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            echo $this->response->InternalServerError($e->getMessage());
         }
     }
 
@@ -123,14 +125,14 @@ class TransactionController {
             $helper = new Validation();
             $validate = $helper->validate($body, $rules);
             if(!empty($validate)){
-                echo json_encode(['status' => 400, 'message' => $validate]);
+                echo $this->response->BadRequest($validate);
                 exit;
             }
 
             $event = $this->trModel->findEventByEventId($body['event_id']);
 
             if(empty($event)){
-                echo json_encode(['status' => 400, 'message'=> 'Event Not Found']);
+                echo $this->response->BadRequest("Event Not Found");
                 exit;
             }
 
@@ -138,7 +140,7 @@ class TransactionController {
                 $file = $_FILES['image'];
 
                 if ($file['error'] !== UPLOAD_ERR_OK) {
-                    echo json_encode(['status' => 400, 'message'=> 'Error Uploading Image']);
+                    echo $this->response->BadRequest("Error Uploading Image");
                     exit;
                 }
 
@@ -154,14 +156,14 @@ class TransactionController {
 
                 if(file_exists($eventImage)){
                     if(!unlink($eventImage)){
-                        echo json_encode(['status' => 400, 'message'=> 'Failed Change Image']);
+                        echo $this->response->BadRequest("Failed Change Image");
                         exit;
                     }
 
                     if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
                         $filename = '../'.$uploadDir.$uniqueName;
                     } else {
-                        echo json_encode(['status' => 400, 'message'=> 'Error Uploading Image']);
+                        echo $this->response->BadRequest("Error Uploading Image");
                         exit;
                     }
                 }
@@ -172,9 +174,9 @@ class TransactionController {
             }
 
             $this->trModel->update($body, $filename);
-            echo json_encode(['status' => 200, 'message'=> 'Success Update Event']);
+            echo $this->response->Success("Success Update Event");
         }catch(\Exception $e){
-            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            echo $this->response->InternalServerError($e->getMessage());
         }
     }
 
@@ -187,18 +189,14 @@ class TransactionController {
             $helper = new Validation();
             $validate = $helper->validate($_POST, $rules);
             if(!empty($validate)){
-                echo json_encode(['status' => 400, 'message' => $validate]);
+                echo $this->response->BadRequest($validate);
                 exit;
             }
 
             $delete = $this->trModel->destroy($_POST['event_booking_id']);
-            if($delete){
-                echo json_encode(['status' => 200, 'message'=> 'Success Delete Data']);
-            }else{
-                echo json_encode(['status' => 200, 'message'=> 'Error Delete Data']);
-            }
+            $this->response->Success('Success Cancel Transaction');
         }catch(\Exception $e){
-            echo json_encode(['status' => 500, 'message'=> 'Internal Server Error', 'error' => $e->getMessage()]);
+            $this->response->InternalServerError($e->getMessage());
         }
     }
 

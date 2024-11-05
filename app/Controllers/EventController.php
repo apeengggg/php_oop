@@ -1,14 +1,17 @@
 <?php 
 
 require_once __DIR__.'/../Models/EventModel.php';
+require_once __DIR__.'/../Helpers/Response.php';
 require_once __DIR__.'/../Helpers/Validation.php';
 
 class EventController {
     private $eventModel;
+    private $response;
 
     public function __construct($db)
     {
         $this->eventModel = new Event($db);
+        $this->response = new Response();
     }
 
     public function index(){
@@ -40,7 +43,7 @@ class EventController {
             header('Content-Type: application/json');
             echo json_encode(['status' => 200, 'data'=> $data, 'totalPages'=> $totalPages, 'message'=> 'Success Get Data']);
         }catch(\Exception $e){
-            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            echo $this->response->InternalServerError($e->getMessage());
 
         }
     }
@@ -98,7 +101,7 @@ class EventController {
             $this->eventModel->store($body, $filename);
             echo json_encode(['status' => 200, 'message'=> 'Success Create User']);
         }catch(\Exception $e){
-            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            echo $this->response->InternalServerError($e->getMessage());
         }
     }
 
@@ -183,7 +186,7 @@ class EventController {
             $this->eventModel->update($body, $filename);
             echo json_encode(['status' => 200, 'message'=> 'Success Update Event']);
         }catch(\Exception $e){
-            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            echo $this->response->InternalServerError($e->getMessage());
         }
     }
 

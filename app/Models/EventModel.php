@@ -1,11 +1,14 @@
 <?php
+require_once __DIR__.'/../Helpers/Response.php';
 
 class Event {
     private $conn;
     private $table = "m_events";
+    private $response;
 
     public function __construct($db) {
         $this->conn = $db;
+        $this->response = new Response();
     }
 
     public function countAll(){
@@ -92,10 +95,10 @@ class Event {
             $stmt->execute();
             return true;
         }catch(PDOException $e){
-            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            echo $this->response->InternalServerError($e->getMessage());
             exit;
         }catch(\Exception $e){
-            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            echo $this->response->InternalServerError($e->getMessage());
             exit;
         }
     }
@@ -117,10 +120,10 @@ class Event {
 
             $stmt->execute();
         }catch(PDOException $e){
-            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            echo $this->response->InternalServerError($e->getMessage());
             exit;
         }catch(\Exception $e){
-            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            echo $this->response->InternalServerError($e->getMessage());
             exit;
         }
     }
@@ -143,10 +146,10 @@ class Event {
             $this->conn->commit();
         }catch(PDOException $e){
             $this->conn->rollback();
-            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            echo $this->response->InternalServerError($e->getMessage());
             exit;
         }catch(\Exception $e){
-            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            echo $this->response->InternalServerError($e->getMessage());
             exit;
         }
     }
@@ -160,10 +163,10 @@ class Event {
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }catch(PDOException $e){
-            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            echo $this->response->InternalServerError($e->getMessage());
             exit;
         }catch(\Exception $e){
-            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            echo $this->response->InternalServerError($e->getMessage());
             exit;
         }
     }
@@ -177,10 +180,10 @@ class Event {
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }catch(PDOException $e){
-            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            echo $this->response->InternalServerError($e->getMessage());
             exit;
         }catch(\Exception $e){
-            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            echo $this->response->InternalServerError($e->getMessage());
             exit;
         }
     }

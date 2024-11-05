@@ -1,14 +1,17 @@
 <?php 
 
 require_once __DIR__.'/../Models/UserModel.php';
+require_once __DIR__.'/../Helpers/Response.php';
 require_once __DIR__.'/../Helpers/Validation.php';
 
 class UserController {
     private $userModel;
+    private $response;
 
     public function __construct($db)
     {
         $this->userModel = new User($db);
+        $this->response = new Response();
     }
 
     public function index(){
@@ -40,7 +43,7 @@ class UserController {
             header('Content-Type: application/json');
             echo json_encode(['status' => 200, 'data'=> $data, 'totalPages'=> $totalPages, 'message'=> 'Success Get Data']);
         }catch(\Exception $e){
-            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            echo $this->response->InternalServerError($e->getMessage());
 
         }
     }
@@ -96,7 +99,7 @@ class UserController {
             $this->userModel->store($body, $filename);
             echo json_encode(['status' => 200, 'message'=> 'Success Create User']);
         }catch(\Exception $e){
-            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            echo $this->response->InternalServerError($e->getMessage());
         }
     }
 
@@ -173,7 +176,7 @@ class UserController {
             $this->userModel->update($body, $filename);
             echo json_encode(['status' => 200, 'message'=> 'Success Update User']);
         }catch(\Exception $e){
-            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            echo $this->response->InternalServerError($e->getMessage());
         }
     }
 
