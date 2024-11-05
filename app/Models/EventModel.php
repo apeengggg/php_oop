@@ -94,6 +94,9 @@ class Event {
         }catch(PDOException $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
+        }catch(\Exception $e){
+            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            exit;
         }
     }
 
@@ -114,6 +117,9 @@ class Event {
 
             $stmt->execute();
         }catch(PDOException $e){
+            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            exit;
+        }catch(\Exception $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
         }
@@ -139,6 +145,9 @@ class Event {
             $this->conn->rollback();
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
+        }catch(\Exception $e){
+            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            exit;
         }
     }
 
@@ -153,6 +162,9 @@ class Event {
         }catch(PDOException $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
+        }catch(\Exception $e){
+            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            exit;
         }
     }
 
@@ -165,6 +177,9 @@ class Event {
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }catch(PDOException $e){
+            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            exit;
+        }catch(\Exception $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
         }

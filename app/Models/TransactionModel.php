@@ -109,6 +109,9 @@ class Transaction {
         }catch(PDOException $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage(), ]);
             exit;
+        }catch(\Exception $e){
+            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            exit;
         }
     }
 
@@ -128,6 +131,9 @@ class Transaction {
             $stmt->execute();
             return true;
         }catch(PDOException $e){
+            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            exit;
+        }catch(\Exception $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
         }
@@ -157,6 +163,9 @@ class Transaction {
         }catch(PDOException $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
+        }catch(\Exception $e){
+            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            exit;
         }
     }
 
@@ -171,6 +180,9 @@ class Transaction {
         }catch(PDOException $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
+        }catch(\Exception $e){
+            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            exit;
         }
     }
 
@@ -183,6 +195,9 @@ class Transaction {
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }catch(PDOException $e){
+            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            exit;
+        }catch(\Exception $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
         }
