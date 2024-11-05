@@ -57,6 +57,7 @@ class EventController {
                 'eventTime' => ['required'],
                 'eventLocation' => ['required'],
                 'eventDescription' => ['required'],
+                'availableTicket' => ['required', 'numeric'],
             ];
 
             $helper = new Validation();
@@ -114,6 +115,7 @@ class EventController {
                 'eventTime' => ['required'],
                 'eventLocation' => ['required'],
                 'eventDescription' => ['required'],
+                'availableTicket' => ['required', 'numeric'],
             ];
 
             $helper = new Validation();
@@ -128,6 +130,17 @@ class EventController {
             if(empty($event)){
                 echo json_encode(['status' => 400, 'message'=> 'Event Not Found']);
                 exit;
+            }
+
+            if($body['availableTicket'] < $event['available_ticket']){
+                echo json_encode(['status' => 400, 'message'=> 'Total Ticket Must Be Greater Than Available Ticket']);
+                exit;
+            }
+
+            $sold = $event['total_ticket'] - $event['available_ticket'];
+            $body['newAvailableTicket'] = $event['available_ticket'];
+            if($body['availableTicket'] != $event['total_ticket']){
+                $body['newAvailableTicket'] = $body['availableTicket'] - $sold;
             }
 
             if(!empty($_FILES) || isset($_FILES['image'])){

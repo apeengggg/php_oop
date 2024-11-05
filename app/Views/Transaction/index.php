@@ -33,13 +33,13 @@ $_SESSION['logged_in'] = true;
                                 <h5>Filter Transaction</h5>
                                 <div class="row">
                                     <div class="col">
+                                        <input type="text" readonly class="form-control event-datepicker" id="filterDate" placeholder="Event Date">
+                                    </div>
+                                    <div class="col">
                                         <input type="text" class="form-control" id="filterEventName" placeholder="Event Name">
                                     </div>
                                     <div class="col">
                                         <input type="text" class="form-control" id="filterUsername" placeholder="Username">
-                                    </div>
-                                    <div class="col">
-                                        <input type="text" readonly class="form-control event-datepicker" id="filterDate" placeholder="Event Date">
                                     </div>
                                 </div>
                                 <div class="row justify-content-end mt-2">
@@ -51,19 +51,19 @@ $_SESSION['logged_in'] = true;
                                 <table id="transactionData" class="table table-striped table-hover text-center" style="width:100%">
                                     <thead>
                                         <tr>
-                                            <th onclick="orderDynamically('username')">
+                                            <th id="usernameColumn" onclick="orderDynamically('username')">
                                                 Username
                                             </th>    
-                                            <th onclick="orderDynamically('event_name')">
+                                            <th id="eventNameColumn" onclick="orderDynamically('event_name')">
                                                 Event Name
                                             </th>
-                                            <th onclick="orderDynamically('date')">
+                                            <th id="eventDateColumn" onclick="orderDynamically('date')">
                                                 Event Date
                                             </th>
-                                            <th onclick="orderDynamically('start_time')">
+                                            <th id="eventTimeColumn" onclick="orderDynamically('start_time')">
                                                 Event Time
                                             </th>
-                                            <th onclick="orderDynamically('is_present')">
+                                            <th id="eventPresentColumn" onclick="orderDynamically('is_present')">
                                                 Present
                                             </th>
                                             <th>Action</th>

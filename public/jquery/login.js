@@ -33,7 +33,11 @@ function login(){
             if(result.status == 200){
                 sessionStorage.setItem('token', result.token)
                 sessionStorage.setItem('data', JSON.stringify(result.data))
-                window.location.href = 'index.php/users'
+                if(result.data.role_id === '2'){
+                    window.location.href = 'index.php/transactions'
+                }else{
+                    window.location.href = 'index.php/users'
+                }
             }else{
                 commonJS.toast(result.message, true)
             }

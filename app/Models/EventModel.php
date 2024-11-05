@@ -76,7 +76,7 @@ class Event {
     public function store($body, $filename){
         try{
             $event_id = uniqid();
-            $query = "INSERT INTO ".$this->table. " (event_id, event_name, location, date, start_time, description, image) VALUES (:event_id, :event_name, :location, :date, :time, :description, :image)";
+            $query = "INSERT INTO ".$this->table. " (event_id, event_name, location, date, start_time, description, image, total_ticket, available_ticket) VALUES (:event_id, :event_name, :location, :date, :time, :description, :image, :total_ticket, :available_ticket)";
             $stmt = $this->conn->prepare($query);
 
             $stmt->bindParam(':event_id', $event_id);
@@ -84,6 +84,8 @@ class Event {
             $stmt->bindParam(':location', $body['eventLocation']);
             $stmt->bindParam(':date', $body['eventDate']);
             $stmt->bindParam(':time', $body['eventTime']);
+            $stmt->bindParam(':total_ticket', $body['availableTicket']);
+            $stmt->bindParam(':available_ticket', $body['availableTicket']);
             $stmt->bindParam(':description', $body['eventDescription']);
             $stmt->bindParam(':image', $filename);
 
@@ -97,7 +99,7 @@ class Event {
 
     public function update($body, $filename){
         try{
-            $query = "UPDATE ". $this->table . " SET event_name = :event_name, location = :location, date = :date, start_time = :start_time, description = :description, image = :image WHERE event_id = :event_id";
+            $query = "UPDATE ". $this->table . " SET event_name = :event_name, location = :location, date = :date, start_time = :start_time, description = :description, image = :image, total_ticket = :total_ticket, available_ticket = :available_ticket WHERE event_id = :event_id";
             $stmt = $this->conn->prepare($query);
 
             $stmt->bindParam(':event_id', $body['event_id']);
@@ -106,10 +108,11 @@ class Event {
             $stmt->bindParam(':date', $body['eventDate']);
             $stmt->bindParam(':start_time', $body['eventTime']);
             $stmt->bindParam(':description', $body['eventDescription']);
+            $stmt->bindParam(':total_ticket', $body['availableTicket']);
+            $stmt->bindParam(':available_ticket', $body['newAvailableTicket']);
             $stmt->bindParam(':image', $filename);
 
             $stmt->execute();
-            return true;
         }catch(\Exception $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
@@ -132,7 +135,7 @@ class Event {
 
     public function findEventByEventId($event_id){
         try{
-            $query = "SELECT event_id, image FROM " . $this->table . " WHERE event_id = :event_id";
+            $query = "SELECT event_id, image, available_ticket, total_ticket FROM " . $this->table . " WHERE event_id = :event_id";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':event_id', $event_id);
             $stmt->execute();

@@ -17,7 +17,11 @@ class TransactionController {
 
     public function get(){
         $param = $_GET;
+        $user_id = null;
         try{
+            if($_SESSION['user']['role_id'] === '2'){
+                $user_id = $_SESSION['user']['user_id'];
+            }
 
             $rules = [
                 'page' => ['required', 'numeric'],
@@ -33,7 +37,7 @@ class TransactionController {
                 exit;
             }
 
-            $results = $this->trModel->all($param);
+            $results = $this->trModel->all($param, $user_id);
             $totalPages = $results['totalPages'];
             $data = $results['data'];
 

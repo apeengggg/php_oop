@@ -13,11 +13,11 @@ class Transaction {
 
         $query = "SELECT r_event_booking.event_booking_id, r_event_booking.is_present, m_events.*, m_users.username FROM " . $this->table;
 
+        $countQuery = "SELECT COUNT(*) as total FROM ". $this->table;
+
         $query .= " JOIN m_events ON r_event_booking.event_id = m_events.event_id ";
 
         $query .= " JOIN m_users ON r_event_booking.user_id = m_users.user_id ";
-
-        $countQuery = "SELECT COUNT(*) as total FROM ". $this->table;
 
         $countQuery .= " JOIN m_events ON r_event_booking.event_id = m_events.event_id ";
 
@@ -26,10 +26,17 @@ class Transaction {
         $query .= ' WHERE 1=1 AND r_event_booking.status = 1 ';
         $countQuery .= ' WHERE 1=1 AND r_event_booking.status = 1 ';
 
+
         if (!empty($param['event_name'])) {
             $query .= ' AND LOWER(m_events.event_name) LIKE LOWER(:event_name) ';
             $countQuery .= ' AND LOWER(m_events.event_name) LIKE LOWER(:event_name) ';
             $params[':event_name'] = '%' . $param['event_name'] . '%';
+        }
+
+        if ($user_id != null || isset($param['user_id'])) {
+            $query .= 'AND m_users.user_id = :user_id ';
+            $countQuery .= 'AND m_users.user_id = :user_id ';
+            $params[':user_id'] = $user_id != null ? $user_id : $param['user_id'];
         }
 
         // var_dump($query);
@@ -99,7 +106,7 @@ class Transaction {
             $stmt->execute();
             return true;
         }catch(\Exception $e){
-            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
+            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage(), ]);
             exit;
         }
     }

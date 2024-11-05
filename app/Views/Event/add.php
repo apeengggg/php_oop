@@ -11,7 +11,7 @@
             </div>
             <div class="card-body">
                 <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-3">
                         <label for="eventName">Event Name</label>
                         <input type="text" class="form-control" id="eventName" placeholder="Event Name">
                     </div>
@@ -22,6 +22,10 @@
                     <div class="form-group col-md-3">
                         <label for="eventTime">Time</label>
                         <input type="time" class="form-control" id="eventTime">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="availableTicket">Available Ticket</label>
+                        <input type="number" min="0" class="form-control" id="availableTicket" placeholder="Available Name">
                     </div>
                 </div>
                 <div class="form-row">

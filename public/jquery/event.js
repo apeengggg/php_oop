@@ -72,6 +72,8 @@ function editData(data){
     $('#eventTime').val(data.start_time)
     $('#eventLocation').val(data.location)
     $('#eventDescription').val(data.description)
+    $('#availableTicket').val(data.available_ticket)
+    $('#availableTicket').attr('min', data.available_ticket)
     $('#previewEventImage').attr('src', data.image)
     event_id = data.event_id
 }
@@ -161,12 +163,14 @@ function buildTemplate(index, data){
             <div class="card-body">
                 <h4>${data[index].event_name}</h4>
                 <p class="card-text">${data[index].description}</p>
+                <hr>
+                <p class="card-text">Total Ticket: ${data[index].total_ticket}</p>
+                <p class="card-text">Available Ticket: ${data[index].available_ticket}</p>
+                <hr>
+                <p class="card-text">Date: ${date}</p>
+                <p class="card-text">Time: ${time}</p>
+                <p class="card-text">${data[index].location}</p>
             </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Date: ${date}</li>
-                <li class="list-group-item">Time: ${time}</li>
-                <li class="list-group-item">${data[index].location}</li>
-            </ul>
             <div class="card-body text-right">
                 ${button}
             </div>
@@ -248,6 +252,7 @@ async function save(){
     var eventTime = $('#eventTime').val()
     var eventLocation = $('#eventLocation').val()
     var eventDescription = $('#eventDescription').val()
+    var availableTicket = $('#availableTicket').val()
 
     var error = []
     if(eventName == ''){
@@ -269,6 +274,14 @@ async function save(){
         error.push("Event Description Required")
     }
 
+    if(availableTicket == ''){
+        error.push("Available Ticket Required")
+    }
+
+    if(availableTicket <= 0){
+        error.push("Available Must Be Greater Than 0")
+    }
+
     if(error.length > 0){
         $('#eventErrorForm').text(error.toString()).show();
         return;
@@ -276,10 +289,11 @@ async function save(){
 
     var formData = new FormData()
     formData.append("eventName", eventName)
-    formData.append("eventDate", moment(eventDate).format('YYYY-DD-MM'))
+    formData.append("eventDate", moment(eventDate, 'DD/MM/YYYY').format('YYYY-MM-DD'))
     formData.append("eventTime", eventTime)
     formData.append("eventLocation", eventLocation)
     formData.append("eventDescription", eventDescription)
+    formData.append("availableTicket", availableTicket)
     if(isEdit){
         formData.append("event_id", event_id)
     }

@@ -4,6 +4,7 @@ var perPagePages = 10;
 var dir = 'asc';
 var isEdit = false;
 var event_booking_id = '';
+var isUser = false
 
 $('.event-datepicker').daterangepicker({
     singleDatePicker: false,
@@ -89,14 +90,17 @@ function buildTemplate(index, data){
     </button>
     `
     rows += '<tr class="template-data">'
+    if(!isUser){
         rows += '<td>'
             rows += data[index].username
         rows += '</td>'
-        rows += '<td>'+ data[index].event_name +'</td>'
-        rows += '<td>'+ date +'</td>'
-        rows += '<td>'+ time +'</td>'
-        rows += '<td>'+ badge +'</td>'
-        rows += '<td>'+ button +'</td>'
+    }
+    
+    rows += '<td>'+ data[index].event_name +'</td>'
+    rows += '<td>'+ date +'</td>'
+    rows += '<td>'+ time +'</td>'
+    rows += '<td>'+ badge +'</td>'
+    rows += '<td>'+ button +'</td>'
     rows += '</tr>'
 
     return rows;
@@ -219,11 +223,20 @@ async function save(){
             commonJS.toast(response.message, true)
         }
     })
+}
 
+function checkIsUser(){
+    var data = JSON.parse(sessionStorage.getItem('data'))
+    if(data.role_id === '2'){
+        isUser = true
+        $('#filterUsername').remove()
+        $('#usernameColumn').remove()
+    }
 }
 
 $(async function (){
     $('#filterDate').val('')
+    checkIsUser()
     await commonJS.setupPermission("T001");
     await search(initPage)
 });
