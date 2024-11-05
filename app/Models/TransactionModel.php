@@ -125,11 +125,11 @@ class Transaction {
         }
     }
 
-    public function destroy($event_id){
+    public function destroy($event_booking_id){
         try{
-            $query = "UPDATE " . $this->table . " SET status = 0 WHERE event_id = :event_id";
+            $query = "UPDATE " . $this->table . " SET status = 0 WHERE event_booking_id = :event_booking_id";
             $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':event_id', $event_id);
+            $stmt->bindParam(':event_booking_id', $event_booking_id);
             $stmt->execute();
             return true;
         }catch(\Exception $e){

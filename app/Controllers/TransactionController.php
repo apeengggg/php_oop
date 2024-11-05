@@ -177,7 +177,7 @@ class TransactionController {
     public function destroy(){
         try{
             $rules = [
-                'event_id' => ['required'],
+                'event_booking_id' => ['required'],
             ];
 
             $helper = new Validation();
@@ -187,7 +187,7 @@ class TransactionController {
                 exit;
             }
 
-            $delete = $this->trModel->destroy($_POST['event_id']);
+            $delete = $this->trModel->destroy($_POST['event_booking_id']);
             if($delete){
                 echo json_encode(['status' => 200, 'message'=> 'Success Delete Data']);
             }else{
