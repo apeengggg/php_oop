@@ -41,6 +41,7 @@ function add(isAdd){
         $("#listEvent").hide()
         $("#addEvent").show()
     }
+    $('#formTitle').text('Add Event')
     clearEventForm()
 }
 
@@ -65,7 +66,7 @@ function editData(data){
 
     let date = moment(data.date).format('DD/MM/YYYY')
 
-    $('#formTitle').text("Edit User")
+    $('#formTitle').text("Edit Event")
     $('#eventName').val(data.event_name)
     $('#eventDate').val(date)
     $('#eventTime').val(data.start_time)
@@ -198,15 +199,15 @@ async function search(page){
         param += `&location=${$('#filterLocation').val()}`
     }
 
-    console.log("🚀 ~ search ~ $('#filterDate').val():", $('#filterDate').val())
     if($('#filterDate').val()){
         let date = $('#filterDate').val()
-        date = date.split('-')
-        date[0] = date[0].replace(/ /g,'')
-        date[1] = date[1].replace(/ /g,'')
+        date = date.split(' - ')
+        console.log("🚀 ~ search ~ date1:", date)
 
-        date[0] = moment(date[0]).format('YYYY-MM-DD')
-        date[1] = moment(date[1]).format('YYYY-MM-DD')
+        date[0] = moment(date[0], 'DD/MM/YYYY').format('YYYY-MM-DD')
+        date[1] = moment(date[1], 'DD/MM/YYYY').format('YYYY-MM-DD')
+        console.log("🚀 ~ search ~ date:", date)
+
 
         param += `&date_start=${date[0]}&date_end=${date[1]}`
     }
@@ -247,7 +248,6 @@ async function save(){
     var eventTime = $('#eventTime').val()
     var eventLocation = $('#eventLocation').val()
     var eventDescription = $('#eventDescription').val()
-    var eventImage = $('#eventImage').val()
 
     var error = []
     if(eventName == ''){

@@ -37,7 +37,7 @@ $_SESSION['logged_in'] = true;
     <section class="content">
         <div class="container-fluid">
             <div class="container mt-4">
-                <div class="row my-3" id="listEvent" style="display: none;">
+                <div class="row my-3" id="listEvent">
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">

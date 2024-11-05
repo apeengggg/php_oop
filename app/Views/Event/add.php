@@ -1,4 +1,4 @@
-<div class="row my-3" id="addEvent">
+<div class="row my-3" id="addEvent" style="display: none;">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
