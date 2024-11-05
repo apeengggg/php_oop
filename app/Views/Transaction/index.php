@@ -63,8 +63,8 @@ $_SESSION['logged_in'] = true;
                                             <th id="eventTimeColumn" onclick="orderDynamically('start_time')">
                                                 Event Time
                                             </th>
-                                            <th id="eventPresentColumn" onclick="orderDynamically('is_present')">
-                                                Present
+                                            <th id="eventPresentColumn" onclick="orderDynamically('status')">
+                                                Status
                                             </th>
                                             <th>Action</th>
                                         </tr>

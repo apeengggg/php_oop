@@ -201,11 +201,7 @@ class EventController {
             }
 
             $delete = $this->eventModel->destroy($_POST['event_id']);
-            if($delete){
-                echo json_encode(['status' => 200, 'message'=> 'Success Delete Data']);
-            }else{
-                echo json_encode(['status' => 200, 'message'=> 'Error Delete Data']);
-            }
+            echo json_encode(['status' => 200, 'message'=> 'Success Delete Data']);
         }catch(\Exception $e){
             echo json_encode(['status' => 500, 'message'=> 'Internal Server Error', 'error' => $e->getMessage()]);
         }

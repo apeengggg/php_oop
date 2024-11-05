@@ -11,7 +11,7 @@ class Transaction {
     public function all($param, $user_id = null) {
         $params = [];
 
-        $query = "SELECT r_event_booking.event_booking_id, r_event_booking.is_present, r_event_booking.status AS status_ticket, m_events.*, m_users.username FROM " . $this->table;
+        $query = "SELECT r_event_booking.event_booking_id, r_event_booking.status AS status_ticket, m_events.*, m_users.username FROM " . $this->table;
 
         $countQuery = "SELECT COUNT(*) as total FROM ". $this->table;
 
@@ -23,9 +23,9 @@ class Transaction {
 
         $countQuery .= " JOIN m_users ON r_event_booking.user_id = m_users.user_id ";
 
-        $query .= ' WHERE 1=1 AND r_event_booking.status <> 0 ';
+        $query .= ' WHERE 1=1 ';
 
-        $countQuery .= ' WHERE 1=1 AND r_event_booking.status <> 0 ';
+        $countQuery .= ' WHERE 1=1 ';
 
 
         if (!empty($param['event_name'])) {
@@ -135,10 +135,24 @@ class Transaction {
 
     public function destroy($event_booking_id){
         try{
+            $this->conn->beginTransaction();
+
             $query = "UPDATE " . $this->table . " SET status = 0 WHERE event_booking_id = :event_booking_id";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':event_booking_id', $event_booking_id);
             $stmt->execute();
+
+            $select_event = "SELECT event_id FROM r_event_booking WHERE event_booking_id = :event_booking_id";
+            $stmt_event = $this->conn->prepare($select_event);
+            $stmt_event->bindParam(':event_booking_id', $event_booking_id);
+            $stmt_event->execute();
+            $data_event = $stmt_event->fetch(PDO::FETCH_ASSOC);
+
+            $queryUpdateTicket = "UPDATE m_events SET available_ticket = CASE WHEN available_ticket < total_ticket THEN available_ticket + 1 ELSE available_ticket END WHERE event_id = :event_id;";
+            $stmt_update = $this->conn->prepare($queryUpdateTicket);
+            $stmt_update->bindParam(':event_id', $data_event['event_id']); 
+            $stmt_update->execute();
+
             return true;
         }catch(PDOException $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);

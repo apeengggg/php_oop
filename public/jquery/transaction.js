@@ -80,21 +80,34 @@ function buildTemplate(index, data){
 
     var date = moment(data[index].date).format('DD MMMM YYYY')
     var time = data[index].start_time.slice(0, 5) + " WIB";
-    var present_badge = data[index].is_present == 1 ? 'success' : 'primary'
-    var present = data[index].is_present == 1 ? 'Present' : 'Not Present'
     
-    if(data[index].status_ticket == 2){
-        present_badge = 'danger'
-        present = 'Canceled'
-    }
-
-    var badge = `<span class="badge badge-${present_badge}">${present}</span>`
-
     var button = `
     <button id="btnDelete${index+1}" class='btn btn-sm btn-danger ml-2' onclick='deleteData("${data[index].event_booking_id}")'>
         <i class='fas fa-trash'></i>
     </button>
     `
+
+    let status, status_badge
+
+    if(data[index].status_ticket == 2){
+        status_badge = 'danger'
+        status = 'Canceled Event'
+        button = ''
+    }else if(data[index].status_ticket == 0){
+        status_badge = 'danger'
+        status = 'Canceled'
+        button = ''
+    }else if(data[index].status_ticket == 3){
+        button = ''
+        status_badge = 'success'
+        status = 'Checked In'
+    }else{
+        status_badge = 'warning'
+        status = 'Booked'
+    }
+
+    var badge = `<span class="badge badge-${status_badge}">${status}</span>`
+
     rows += '<tr class="template-data">'
     if(!isUser){
         rows += '<td>'
