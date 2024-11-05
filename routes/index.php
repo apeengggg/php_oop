@@ -2,6 +2,7 @@
 require_once __DIR__.'/../app/Controllers/AuthController.php';
 require_once __DIR__.'/../app/Controllers/UserController.php';
 require_once __DIR__.'/../app/Controllers/EventController.php';
+require_once __DIR__.'/../app/Controllers/TransactionController.php';
 require_once __DIR__.'/../app/Middlewares/Jwt.php';
 require_once __DIR__.'/../app/Middlewares/RolesMiddleware.php';
 require_once __DIR__.'/../config/Database.php';
@@ -13,6 +14,7 @@ $db = (new Database())->getConnection();
 $authController = new AuthController();
 $userController = new UserController($db);
 $eventController = new EventController($db);
+$trController = new TransactionController($db);
 $roleMiddleware = new RolesMiddleware($db);
 $jwt = new Token();
 
@@ -77,6 +79,29 @@ switch ($uri){
         $jwt->handle();
         $roleMiddleware->handle('M003', 'can_delete');
         $eventController->destroy();
+        break;
+    case '/transactions':
+        $trController->index();
+        break;
+    case '/transaction/get':
+        $jwt->handle();
+        $roleMiddleware->handle('T001', 'can_read');
+        $trController->get();
+        break;
+    case '/transaction/post':
+        $jwt->handle();
+        $roleMiddleware->handle('T001', 'can_create');
+        $trController->store();
+        break;
+    case '/transaction/put':
+        $jwt->handle();
+        $roleMiddleware->handle('T001', 'can_update');
+        $trController->update();
+        break;
+    case '/transaction/delete':
+        $jwt->handle();
+        $roleMiddleware->handle('T001', 'can_delete');
+        $trController->destroy();
         break;
     default:
         $authController->notfound();
