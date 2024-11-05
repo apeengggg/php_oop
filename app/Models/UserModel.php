@@ -89,7 +89,7 @@ class User {
 
             $stmt->execute();
             return true;
-        }catch(\Exception $e){
+        }catch(PDOException $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
         }
@@ -108,7 +108,7 @@ class User {
 
             $stmt->execute();
             return true;
-        }catch(\Exception $e){
+        }catch(PDOException $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
         }
@@ -121,7 +121,7 @@ class User {
             $stmt->bindParam(':user_id', $user_id);
             $stmt->execute();
             return true;
-        }catch(\Exception $e){
+        }catch(PDOException $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
         }
@@ -134,7 +134,7 @@ class User {
             $stmt->bindParam(':user_id', $user_id);
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
-        }catch(\Exception $e){
+        }catch(PDOException $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
         }
@@ -148,7 +148,7 @@ class User {
             $stmt->bindParam(':user_id', $user_id);
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
-        }catch(\Exception $e){
+        }catch(PDOException $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
         }

@@ -33,7 +33,7 @@ function login(){
             if(result.status == 200){
                 sessionStorage.setItem('token', result.token)
                 sessionStorage.setItem('data', JSON.stringify(result.data))
-                if(result.data.role_id === '2'){
+                if(result.data.role_id == '2'){
                     window.location.href = 'index.php/transactions'
                 }else{
                     window.location.href = 'index.php/users'

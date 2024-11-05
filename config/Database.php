@@ -6,6 +6,7 @@ class Database
     private $username = 'root';
     private $password = '';
     private $connection;
+    private $isTransactionActive = false;
 
     public function __construct()
     {
@@ -21,6 +22,27 @@ class Database
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             die("Database connection failed: " . $e->getMessage());
+        }
+    }
+
+    public function beginTransaction() {
+        if (!$this->isTransactionActive) {
+            $this->connection->beginTransaction();
+            $this->isTransactionActive = true;
+        }
+    }
+
+    public function commit() {
+        if ($this->isTransactionActive) {
+            $this->connection->commit();
+            $this->isTransactionActive = false;
+        }
+    }
+
+    public function rollback() {
+        if ($this->isTransactionActive) {
+            $this->connection->rollBack();
+            $this->isTransactionActive = false;
         }
     }
 

@@ -19,7 +19,7 @@ class TransactionController {
         $param = $_GET;
         $user_id = null;
         try{
-            if($_SESSION['user']['role_id'] === '2'){
+            if($_SESSION['user']['role_id'] == '2'){
                 $user_id = $_SESSION['user']['user_id'];
             }
 

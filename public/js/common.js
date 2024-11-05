@@ -170,10 +170,10 @@ class CommonJS{
         $('#sideBarImage').attr('src', data.image)
 
         for(let i in  permission){
-            if(permission[i].function_id.substring(0,1) === "M" && permission[i].can_read === "1"){
+            if(permission[i].function_id.substring(0,1) === "M" && permission[i].can_read == "1"){
                 master.push(permission[i])
             }
-            if(permission[i].function_id.substring(0,1) === "T" && permission[i].can_read === "1"){
+            if(permission[i].function_id.substring(0,1) === "T" && permission[i].can_read == "1"){
                 transaction.push(permission[i])
             }
 
@@ -181,13 +181,13 @@ class CommonJS{
                 $("#pageTitle").text(permission[i].function_name)
                 $("#breadcrumbTitle").text(permission[i].function_name)
 
-                if(permission[i].can_create === "0"){
+                if(permission[i].can_create == "0"){
                     $("#btnAdd").remove()
                 }
-                if(permission[i].can_update === "0"){
+                if(permission[i].can_update == "0"){
                     $('[id*="btnEdit"]').remove()
                 }
-                if(permission[i].can_delete === "0"){
+                if(permission[i].can_delete == "0"){
                     $('[id*="btnDelete"]').remove()
                 }
             }

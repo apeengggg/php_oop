@@ -91,7 +91,7 @@ class Event {
 
             $stmt->execute();
             return true;
-        }catch(\Exception $e){
+        }catch(PDOException $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
         }
@@ -113,7 +113,7 @@ class Event {
             $stmt->bindParam(':image', $filename);
 
             $stmt->execute();
-        }catch(\Exception $e){
+        }catch(PDOException $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
         }
@@ -121,12 +121,22 @@ class Event {
 
     public function destroy($event_id){
         try{
+            $this->conn->beginTransaction();
+
             $query = "UPDATE " . $this->table . " SET status = 0 WHERE event_id = :event_id";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':event_id', $event_id);
+
+            $queryTr = "UPDATE r_event_booking SET status = 2 WHERE event_id = :event_id";
+            $stmtTr = $this->conn->prepare($queryTr);
+            $stmtTr->bindParam(':event_id', $event_id);
+
             $stmt->execute();
-            return true;
-        }catch(\Exception $e){
+            $stmtTr->execute();
+
+            $this->conn->commit();
+        }catch(PDOException $e){
+            $this->conn->rollback();
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
         }
@@ -140,7 +150,7 @@ class Event {
             $stmt->bindParam(':event_id', $event_id);
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
-        }catch(\Exception $e){
+        }catch(PDOException $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
         }
@@ -154,7 +164,7 @@ class Event {
             $stmt->bindParam(':user_id', $user_id);
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
-        }catch(\Exception $e){
+        }catch(PDOException $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
         }

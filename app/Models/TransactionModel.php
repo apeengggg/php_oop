@@ -11,7 +11,7 @@ class Transaction {
     public function all($param, $user_id = null) {
         $params = [];
 
-        $query = "SELECT r_event_booking.event_booking_id, r_event_booking.is_present, m_events.*, m_users.username FROM " . $this->table;
+        $query = "SELECT r_event_booking.event_booking_id, r_event_booking.is_present, r_event_booking.status AS status_ticket, m_events.*, m_users.username FROM " . $this->table;
 
         $countQuery = "SELECT COUNT(*) as total FROM ". $this->table;
 
@@ -23,8 +23,9 @@ class Transaction {
 
         $countQuery .= " JOIN m_users ON r_event_booking.user_id = m_users.user_id ";
 
-        $query .= ' WHERE 1=1 AND r_event_booking.status = 1 ';
-        $countQuery .= ' WHERE 1=1 AND r_event_booking.status = 1 ';
+        $query .= ' WHERE 1=1 AND r_event_booking.status <> 0 ';
+
+        $countQuery .= ' WHERE 1=1 AND r_event_booking.status <> 0 ';
 
 
         if (!empty($param['event_name'])) {
@@ -105,7 +106,7 @@ class Transaction {
 
             $stmt->execute();
             return true;
-        }catch(\Exception $e){
+        }catch(PDOException $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage(), ]);
             exit;
         }
@@ -126,7 +127,7 @@ class Transaction {
 
             $stmt->execute();
             return true;
-        }catch(\Exception $e){
+        }catch(PDOException $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
         }
@@ -139,7 +140,7 @@ class Transaction {
             $stmt->bindParam(':event_booking_id', $event_booking_id);
             $stmt->execute();
             return true;
-        }catch(\Exception $e){
+        }catch(PDOException $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
         }
@@ -153,7 +154,7 @@ class Transaction {
             $stmt->bindParam(':event_id', $event_id);
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
-        }catch(\Exception $e){
+        }catch(PDOException $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
         }
@@ -167,7 +168,7 @@ class Transaction {
             $stmt->bindParam(':user_id', $user_id);
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
-        }catch(\Exception $e){
+        }catch(PDOException $e){
             echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage()]);
             exit;
         }

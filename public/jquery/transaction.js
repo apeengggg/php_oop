@@ -80,8 +80,14 @@ function buildTemplate(index, data){
 
     var date = moment(data[index].date).format('DD MMMM YYYY')
     var time = data[index].start_time.slice(0, 5) + " WIB";
-    var present_badge = data[index].is_present === 1 ? 'success' : 'danger'
-    var present = data[index].is_present === 1 ? 'Present' : 'Not Present'
+    var present_badge = data[index].is_present == 1 ? 'success' : 'primary'
+    var present = data[index].is_present == 1 ? 'Present' : 'Not Present'
+    
+    if(data[index].status_ticket == 2){
+        present_badge = 'danger'
+        present = 'Canceled'
+    }
+
     var badge = `<span class="badge badge-${present_badge}">${present}</span>`
 
     var button = `
