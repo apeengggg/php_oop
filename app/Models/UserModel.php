@@ -4,7 +4,7 @@ require_once __DIR__.'/../Helpers/Response.php';
 class User {
     private $conn;
     private $table = "m_users";
-    private $response;
+    protected $response;
 
     public function __construct($db) {
         $this->conn = $db;
@@ -129,7 +129,6 @@ class User {
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':user_id', $user_id);
             $stmt->execute();
-            return true;
         }catch(PDOException $e){
             echo $this->response->InternalServerError($e->getMessage());
             exit;

@@ -4,11 +4,19 @@ require __DIR__.'/../Models/AuthModel.php';
 require __DIR__.'/../Middlewares/Jwt.php';
 
 class AuthController{
+    protected $response;
+
+    public function __construct()
+    {
+        $this->response = new Response();
+    }
+
     public function index(){
         include __DIR__. '/../Views/Login/index.php';
     }
     
     public function login(){
+        header('Content-Type: application/json');
         $username = $_POST['username'];
         $password = $_POST['password'];
         
@@ -29,12 +37,12 @@ class AuthController{
 
                 $_SESSION['token'] = $jwt;
                 $_SESSION['user'] = $result;
-                echo json_encode(['status' => 200, 'message' => 'Login Successfully', 'data' => $result, 'token' => $jwt]);
+                echo $this->response->OkLogin($result, 'Login Successfully', $jwt);
             }else{
-                echo json_encode(['status' => 400, 'message' => 'Login Failed']);
+                echo $this->response->BadRequest("Login Failed");
             }
         }else{
-            echo json_encode(['status' => 400, 'message' => 'Login Failed']);
+            echo $this->response->BadRequest("Login Failed");
         } 
     }
 

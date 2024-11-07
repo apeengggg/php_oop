@@ -2,6 +2,7 @@
 
 require __DIR__. '/../../vendor/autoload.php';
 require __DIR__. '/../../config/bootstrap.php';
+require __DIR__. '/../Helpers/Response.php';
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -10,6 +11,12 @@ use Firebase\JWT\ExpiredException;
 class Token
 {
     private $secretKey = JWT_SECRET_KEY;
+    protected $response;
+
+    public function __construct()
+    {
+        $this->response = new Response();
+    }
 
     public function handle()
     {
@@ -23,18 +30,18 @@ class Token
                     $decoded = JWT::decode($jwt, new Key($this->secretKey, 'HS256'));
                     $request['user'] = (array) $decoded->data;
                 } catch (ExpiredException $e) {
-                    echo json_encode(["status" => 401, 'message' => "Token has expired."]);
+                    echo $this->response->Unauthorization("Token Expired");
                     exit;
                 } catch (Exception $e) {
-                    echo json_encode(["status" => 401, 'message' => "Invalid token."]);
+                    echo $this->response->Unauthorization("Invalid Token");
                     exit;
                 }
             } else {
-                echo json_encode(["status" => 401, 'message' => "Authorization header format is invalid."]);
+                echo $this->response->Unauthorization("Authorization Header Format Is Invalid");
                 exit;
             }
         } else {
-            echo json_encode(["status" => 401, 'message' => "Authorization header not found."]);
+            echo $this->response->Unauthorization("Token Not Found");
             exit;
         }
     }
@@ -48,19 +55,5 @@ class Token
         ];
 
         return JWT::encode($payload, $this->secretKey, 'HS256');
-    }
-
-    public function decodeToken($token) {
-        try {
-            if($token == null){
-                return false;
-            }
-
-            return JWT::decode($token, new Key($this->secretKey, 'HS256'));
-        } catch (ExpiredException $e) {
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
     }
 }

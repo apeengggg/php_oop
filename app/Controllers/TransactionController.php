@@ -6,7 +6,7 @@ require_once __DIR__.'/../Helpers/Validation.php';
 
 class TransactionController {
     private $trModel;
-    private $response;
+    protected $response;
 
     public function __construct($db)
     {
@@ -194,9 +194,9 @@ class TransactionController {
             }
 
             $delete = $this->trModel->destroy($_POST['event_booking_id']);
-            $this->response->Success('Success Cancel Transaction');
+            echo $this->response->Success('Success Cancel Transaction');
         }catch(\Exception $e){
-            $this->response->InternalServerError($e->getMessage());
+            echo $this->response->InternalServerError($e->getMessage());
         }
     }
 

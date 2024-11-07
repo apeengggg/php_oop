@@ -5,7 +5,7 @@ require_once __DIR__.'/../Helpers/Response.php';
 class Transaction {
     private $conn;
     private $table = "r_event_booking";
-    private $response;
+    protected $response;
 
     public function __construct($db) {
         $this->conn = $db;
@@ -111,7 +111,7 @@ class Transaction {
             $stmt->execute();
             return true;
         }catch(PDOException $e){
-            echo json_encode(['status' => 500, 'message' => 'Internal Server Error', 'error' => $e->getMessage(), ]);
+            $this->response->InternalServerError($e->getMessage());
             exit;
         }catch(\Exception $e){
             echo $this->response->InternalServerError($e->getMessage());

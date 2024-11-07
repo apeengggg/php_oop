@@ -4,7 +4,7 @@ require_once __DIR__.'/../Helpers/Response.php';
 class Event {
     private $conn;
     private $table = "m_events";
-    private $response;
+    protected $response;
 
     public function __construct($db) {
         $this->conn = $db;

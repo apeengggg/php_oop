@@ -6,7 +6,7 @@ require_once __DIR__.'/../Helpers/Validation.php';
 
 class UserController {
     private $userModel;
-    private $response;
+    protected $response;
 
     public function __construct($db)
     {
@@ -32,7 +32,7 @@ class UserController {
             $helper = new Validation();
             $validate = $helper->validate($param, $rules);
             if(!empty($validate)){
-                echo json_encode(['status' => 400, 'message' => $validate]);
+                echo $this->response->BadRequest($validate);
                 exit;
             }
 
@@ -41,7 +41,7 @@ class UserController {
             $data = $results['data'];
 
             header('Content-Type: application/json');
-            echo json_encode(['status' => 200, 'data'=> $data, 'totalPages'=> $totalPages, 'message'=> 'Success Get Data']);
+            echo $this->response->OkPaging($data, "Success Get Data", $totalPages);
         }catch(\Exception $e){
             echo $this->response->InternalServerError($e->getMessage());
 
@@ -64,7 +64,7 @@ class UserController {
             $helper = new Validation();
             $validate = $helper->validate($body, $rules);
             if(!empty($validate)){
-                echo json_encode(['status' => 400, 'message' => $validate]);
+                echo $this->response->BadRequest($validate);
                 exit;
             }
 
@@ -72,7 +72,7 @@ class UserController {
                 $file = $_FILES['image'];
 
                 if ($file['error'] !== UPLOAD_ERR_OK) {
-                    echo json_encode(['status' => 400, 'message'=> 'Error Uploading Image']);
+                    echo $this->response->BadRequest("Error Uploading Image");
                     exit;
                 }
 
@@ -87,7 +87,7 @@ class UserController {
                 if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
                     $filename = '../'.$uploadDir.$uniqueName;
                 } else {
-                    echo json_encode(['status' => 400, 'message'=> 'Error Uploading Image']);
+                    echo $this->response->BadRequest("Error Uploading Image");
                     exit;
                 } 
             }
@@ -97,7 +97,7 @@ class UserController {
             }
 
             $this->userModel->store($body, $filename);
-            echo json_encode(['status' => 200, 'message'=> 'Success Create User']);
+            echo $this->response->Success("Success Create User");
         }catch(\Exception $e){
             echo $this->response->InternalServerError($e->getMessage());
         }
@@ -119,20 +119,20 @@ class UserController {
             $helper = new Validation();
             $validate = $helper->validate($body, $rules);
             if(!empty($validate)){
-                echo json_encode(['status' => 400, 'message' => $validate]);
+                echo $this->response->BadRequest($validate);
                 exit;
             }
 
             $user = $this->userModel->findUserByUserId($body['user_id']);
 
             if(empty($user)){
-                echo json_encode(['status' => 400, 'message'=> 'User Not Found']);
+                echo $this->response->BadRequest("User Not Found");
                 exit;
             }
 
             $username_unique = $this->userModel->findUserByUsername($body['username'], $body['user_id']);
             if($username_unique){
-                echo json_encode(['status' => 400, 'message'=> 'Username already exists!']);
+                echo $this->response->BadRequest("Username already exists!");
                 exit;
             }
 
@@ -140,7 +140,7 @@ class UserController {
                 $file = $_FILES['image'];
 
                 if ($file['error'] !== UPLOAD_ERR_OK) {
-                    echo json_encode(['status' => 400, 'message'=> 'Error Uploading Image']);
+                    echo $this->response->BadRequest("Error Uploading Image");
                     exit;
                 }
 
@@ -156,14 +156,14 @@ class UserController {
 
                 if(file_exists($userImage)){
                     if(!unlink($userImage)){
-                        echo json_encode(['status' => 400, 'message'=> 'Failed Change Image']);
+                        echo $this->response->BadRequest("Failed Change Image");
                         exit;
                     }
 
                     if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
                         $filename = '../'.$uploadDir.$uniqueName;
                     } else {
-                        echo json_encode(['status' => 400, 'message'=> 'Error Uploading Image']);
+                        echo $this->response->BadRequest("Error Uploading Image");
                         exit;
                     }
                 }
@@ -174,18 +174,13 @@ class UserController {
             }
 
             $this->userModel->update($body, $filename);
-            echo json_encode(['status' => 200, 'message'=> 'Success Update User']);
+            echo $this->response->Success("Success Update User");
         }catch(\Exception $e){
             echo $this->response->InternalServerError($e->getMessage());
         }
     }
 
     public function destroy(){
-        if(!isset($_POST['user_id'])){
-            echo json_encode(['status' => 400, 'message' => 'User Id Required']);
-            return;
-        }
-
         try{
             $rules = [
                 'user_id' => ['required'],
@@ -194,18 +189,14 @@ class UserController {
             $helper = new Validation();
             $validate = $helper->validate($_POST, $rules);
             if(!empty($validate)){
-                echo json_encode(['status' => 400, 'message' => $validate]);
+                echo $this->response->BadRequest($validate);
                 exit;
             }
 
-            $delete = $this->userModel->destroy($_POST['user_id']);
-            if($delete){
-                echo json_encode(['status' => 200, 'message'=> 'Success Delete Data']);
-            }else{
-                echo json_encode(['status' => 200, 'message'=> 'Error Delete Data']);
-            }
+            $this->userModel->destroy($_POST['user_id']);
+            echo $this->response->Success("Success Delete Data");
         }catch(\Exception $e){
-            echo json_encode(['status' => 500, 'message'=> 'Internal Server Error', 'error' => $e->getMessage()]);
+            echo $this->response->InternalServerError($e->getMessage());
         }
     }
 

@@ -29,7 +29,7 @@ function login(){
         data: data,
         success: function (response) {
         console.log("🚀 ~ login ~ response:", response)
-            let result = JSON.parse(response) || {status: 400, message: 'Bad Request'}
+            let result = response
             if(result.status == 200){
                 sessionStorage.setItem('token', result.token)
                 sessionStorage.setItem('data', JSON.stringify(result.data))

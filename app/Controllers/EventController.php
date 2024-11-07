@@ -6,7 +6,7 @@ require_once __DIR__.'/../Helpers/Validation.php';
 
 class EventController {
     private $eventModel;
-    private $response;
+    protected $response;
 
     public function __construct($db)
     {
@@ -32,7 +32,7 @@ class EventController {
             $helper = new Validation();
             $validate = $helper->validate($param, $rules);
             if(!empty($validate)){
-                echo json_encode(['status' => 400, 'message' => $validate]);
+                echo $this->response->BadRequest($validate);
                 exit;
             }
 
@@ -41,7 +41,7 @@ class EventController {
             $data = $results['data'];
 
             header('Content-Type: application/json');
-            echo json_encode(['status' => 200, 'data'=> $data, 'totalPages'=> $totalPages, 'message'=> 'Success Get Data']);
+            echo $this->response->OkPaging($data, "Success Get Data", $totalPages);
         }catch(\Exception $e){
             echo $this->response->InternalServerError($e->getMessage());
 
@@ -66,7 +66,7 @@ class EventController {
             $helper = new Validation();
             $validate = $helper->validate($body, $rules);
             if(!empty($validate)){
-                echo json_encode(['status' => 400, 'message' => $validate]);
+                echo $this->response->BadRequest($validate);
                 exit;
             }
 
@@ -74,7 +74,7 @@ class EventController {
                 $file = $_FILES['image'];
 
                 if ($file['error'] !== UPLOAD_ERR_OK) {
-                    echo json_encode(['status' => 400, 'message'=> 'Error Uploading Image']);
+                    echo $this->response->BadRequest("Error Uploading Image");
                     exit;
                 }
 
@@ -89,7 +89,7 @@ class EventController {
                 if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
                     $filename = '../'.$uploadDir.$uniqueName;
                 } else {
-                    echo json_encode(['status' => 400, 'message'=> 'Error Uploading Image']);
+                    echo $this->response->BadRequest("Error Uploading Image");
                     exit;
                 } 
             }
@@ -99,7 +99,7 @@ class EventController {
             }
 
             $this->eventModel->store($body, $filename);
-            echo json_encode(['status' => 200, 'message'=> 'Success Create User']);
+            echo $this->response->Success("Success Create User");
         }catch(\Exception $e){
             echo $this->response->InternalServerError($e->getMessage());
         }
@@ -124,19 +124,19 @@ class EventController {
             $helper = new Validation();
             $validate = $helper->validate($body, $rules);
             if(!empty($validate)){
-                echo json_encode(['status' => 400, 'message' => $validate]);
+                echo $this->response->BadRequest($validate);
                 exit;
             }
 
             $event = $this->eventModel->findEventByEventId($body['event_id']);
 
             if(empty($event)){
-                echo json_encode(['status' => 400, 'message'=> 'Event Not Found']);
+                echo $this->response->BadRequest("Event Not Found");
                 exit;
             }
 
             if($body['availableTicket'] < $event['available_ticket']){
-                echo json_encode(['status' => 400, 'message'=> 'Total Ticket Must Be Greater Than Available Ticket']);
+                echo $this->response->BadRequest("Total Ticket Must Be Greater Than Available Ticket");
                 exit;
             }
 
@@ -150,7 +150,7 @@ class EventController {
                 $file = $_FILES['image'];
 
                 if ($file['error'] !== UPLOAD_ERR_OK) {
-                    echo json_encode(['status' => 400, 'message'=> 'Error Uploading Image']);
+                    echo $this->response->BadRequest("Error Uploading Image");
                     exit;
                 }
 
@@ -166,14 +166,14 @@ class EventController {
 
                 if(file_exists($eventImage)){
                     if(!unlink($eventImage)){
-                        echo json_encode(['status' => 400, 'message'=> 'Failed Change Image']);
+                        echo $this->response->BadRequest("Failed Change Image");
                         exit;
                     }
 
                     if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
                         $filename = '../'.$uploadDir.$uniqueName;
                     } else {
-                        echo json_encode(['status' => 400, 'message'=> 'Error Uploading Image']);
+                        echo $this->response->BadRequest("Error Uploading Image");
                         exit;
                     }
                 }
@@ -184,7 +184,7 @@ class EventController {
             }
 
             $this->eventModel->update($body, $filename);
-            echo json_encode(['status' => 200, 'message'=> 'Success Update Event']);
+            echo $this->response->Success("Success Update Event");
         }catch(\Exception $e){
             echo $this->response->InternalServerError($e->getMessage());
         }
@@ -199,14 +199,14 @@ class EventController {
             $helper = new Validation();
             $validate = $helper->validate($_POST, $rules);
             if(!empty($validate)){
-                echo json_encode(['status' => 400, 'message' => $validate]);
+                echo $this->response->BadRequest($validate);
                 exit;
             }
 
             $delete = $this->eventModel->destroy($_POST['event_id']);
-            echo json_encode(['status' => 200, 'message'=> 'Success Delete Data']);
+            echo $this->response->Success("Success Delete Data");
         }catch(\Exception $e){
-            echo json_encode(['status' => 500, 'message'=> 'Internal Server Error', 'error' => $e->getMessage()]);
+            echo $this->response->InternalServerError($e->getMessage());
         }
     }
 
