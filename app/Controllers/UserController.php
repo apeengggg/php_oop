@@ -155,9 +155,11 @@ class UserController {
                 $userImage = preg_replace('/^\.\.\//', '', $user['image']);
 
                 if(file_exists($userImage)){
-                    if(!unlink($userImage)){
-                        echo $this->response->BadRequest("Failed Change Image");
-                        exit;
+                    if($userImage != 'public/img/common.png'){
+                        if(!unlink($userImage)){
+                            echo $this->response->BadRequest("Failed Change Image");
+                            exit;
+                        }
                     }
 
                     if (move_uploaded_file($file['tmp_name'], $uploadFile)) {

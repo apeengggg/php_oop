@@ -165,9 +165,11 @@ class EventController {
                 $eventImage = preg_replace('/^\.\.\//', '', $event['image']);
 
                 if(file_exists($eventImage)){
-                    if(!unlink($eventImage)){
-                        echo $this->response->BadRequest("Failed Change Image");
-                        exit;
+                    if($eventImage != 'public/img/common_event.png'){
+                        if(!unlink($eventImage)){
+                            echo $this->response->BadRequest("Failed Change Image");
+                            exit;
+                        }
                     }
 
                     if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
