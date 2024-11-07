@@ -36,6 +36,9 @@ switch ($uri){
     case '/login/authenticate':
         $authController->login();
         break;
+    case '/logout':
+        $authController->logout();
+        break;
     case '/users':
         $userController->index();
         break;

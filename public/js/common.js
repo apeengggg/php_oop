@@ -152,6 +152,13 @@ class CommonJS{
             $('#loading').hide()
         }
     }
+    
+    logout(){
+        this.exec('/logout', null, 'POST', () => {
+            sessionStorage.clear()
+            window.location.href = baseUrl
+        })
+    }
 
     setupPermission(function_id){
         console.log("🚀 ~ CommonJS ~ setupPermission ~ function_id:", function_id)
@@ -259,6 +266,15 @@ class CommonJS{
                 `
             }
         }
+
+        rows += `<li class="nav-header">
+            <li class="nav-item">
+                <a onclick="commonJS.logout()" class="nav-link">
+                    <i class="nav-icon fa-solid fa-right-from-bracket"></i>
+                    <p>Logout</p>
+                </a>
+            </li>
+        </li>`
 
         $("#nav").html(rows)
     }

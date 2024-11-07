@@ -53,4 +53,10 @@ class AuthController{
     public function forbidden(){
         include __DIR__. '/../Views/Error/403.php';
     }
+
+    public function logout(){
+        $_SESSION = [];
+        session_destroy();
+        echo $this->response->Success("Logout Successfully");
+    }
 }
