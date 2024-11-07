@@ -94,10 +94,22 @@ function buildTemplate(index, data){
     var rows = ""
 
     let date = moment(data[index].date).format('DD MMMM YYYY')
-    let time = data[index].start_time.slice(0, 5) + " WIB";
 
+    let date_event = moment(data[index].date, 'YYYY-MM-DD')
+    let pastDate = date_event.isBefore(moment().startOf('day'))
+    
+    let time = data[index].start_time.slice(0, 5) + " WIB";
+    
     let available_ticket = data[index].available_ticket <= 0 ? '<span class="text-danger">Ticket Sold Out</span>' : data[index].available_ticket
 
+    let button = ` <div class="card-footer text-right">
+                <button class="btn btn-primary" onclick="bookingEvent('${data[index].event_id}')">Booking</button>
+            </div>`
+
+    if(pastDate){
+        button = ''
+    }
+    
     rows += `
         <div class="card template-data" style="width: 18rem;">
             <img src="${data[index].image}" class="card-img-top" height="300" alt="${data[index].event_name}">
@@ -113,9 +125,7 @@ function buildTemplate(index, data){
                 <p class="card-text">Time: ${time}</p>
                 <p class="card-text">${data[index].location}</p>
             </div>
-            <div class="card-footer text-right">
-                <button class="btn btn-primary" onclick="bookingEvent('${data[index].event_id}')">Booking</button>
-            </div>
+            ${button}
         </div>
     `
 
