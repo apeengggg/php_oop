@@ -188,7 +188,6 @@ async function search(page){
 }
 
 async function save(){
-    $('#userFormErrorMessage').hide();
     var name = $('#userName').val()
     var username = $('#userUsername').val()
     var role = $('#userRole').val()
@@ -212,7 +211,7 @@ async function save(){
     }
 
     if(error.length > 0){
-        $('#userFormErrorMessage').text(error.toString()).show();
+        commonJS.toast(error.toString(), true)
         return;
     }
 

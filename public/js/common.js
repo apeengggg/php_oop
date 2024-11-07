@@ -267,14 +267,13 @@ class CommonJS{
             }
         }
 
-        rows += `<li class="nav-header">
+        rows += `<li class="nav-header"> System </li>
             <li class="nav-item">
                 <a onclick="commonJS.logout()" class="nav-link">
                     <i class="nav-icon fa-solid fa-right-from-bracket"></i>
                     <p>Logout</p>
                 </a>
-            </li>
-        </li>`
+            </li>`
 
         $("#nav").html(rows)
     }

@@ -89,8 +89,6 @@ $_SESSION['logged_in'] = true;
                                 <h5 class="card-header" id="userFormTitle">Add User</h5>
                                 <div class="card-body"id="formUser">
                                     <div class="form-group">
-                                    <div class="alert alert-danger" role="alert" id="userFormErrorMessage" style="display:none;">
-                                    </div>
                                     </div>
                                     <div class="form-group text-center">
                                         <img id="profileImage" onclick="changeImage()" src="../public/img/common.png" alt="" width="100">

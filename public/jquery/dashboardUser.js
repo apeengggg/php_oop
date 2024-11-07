@@ -95,7 +95,7 @@ function buildTemplate(index, data){
     let date = moment(data[index].date).format('DD MMMM YYYY')
     let time = data[index].start_time.slice(0, 5) + " WIB";
 
-    let available_ticket = data[index].available_ticket <= 0 ? 'Ticket Sold Out' : data[index].available_ticket
+    let available_ticket = data[index].available_ticket <= 0 ? '<span class="text-danger">Ticket Sold Out</span>' : data[index].available_ticket
 
     rows += `
         <div class="card template-data" style="width: 18rem;">
@@ -197,7 +197,6 @@ async function search(page, seeAll = 0){
 }
 
 async function save(){
-    $('#userFormErrorMessage').hide();
     var eventName = $('#eventName').val()
     var eventDate = $('#eventDate').val()
     var eventTime = $('#eventTime').val()
@@ -234,7 +233,7 @@ async function save(){
     }
 
     if(error.length > 0){
-        $('#eventErrorForm').text(error.toString()).show();
+        commonJS.toast(error.toString(), true)
         return;
     }
 

@@ -1,3 +1,10 @@
+$('#password').on('keypress', function (e) {
+    console.log("🚀 ~ e:", e)
+    if (e.key === 'Enter') {
+        login()
+    }
+});
+
 function login(){
     $('#loginErrorMessage').hide()
     const username = $('#username').val();

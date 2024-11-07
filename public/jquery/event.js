@@ -246,7 +246,6 @@ async function search(page){
 }
 
 async function save(){
-    $('#userFormErrorMessage').hide();
     var eventName = $('#eventName').val()
     var eventDate = $('#eventDate').val()
     var eventTime = $('#eventTime').val()
@@ -283,7 +282,7 @@ async function save(){
     }
 
     if(error.length > 0){
-        $('#eventErrorForm').text(error.toString()).show();
+        commonJS.toast(error.toString(), true)
         return;
     }
 
