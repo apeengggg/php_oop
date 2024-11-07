@@ -4,6 +4,7 @@ var perPagePages = 6;
 var dir = 'asc';
 var isEdit = false;
 var event_id = '';
+var isAll = false;
 
 $('.event-datepicker').daterangepicker({
     singleDatePicker: false,
@@ -81,7 +82,7 @@ async function bookingEvent(event_id){
     commonJS.swalConfirmAjax('Are you sure want to booking ticket for this event?', 'Yes', 'No', commonJS.exec, {event_id: event_id} , 'POST', '/event/booking', (response)=> {
         if(response.status == 200){
             commonJS.toast(response.message, false)
-            search(1)
+            seeAll(isAll)
         }else{
             commonJS.toast(response.message, true)
         }
@@ -125,11 +126,13 @@ function seeAll(seeAll){
         $('#filterEvent').show();
         $('#allEvent').show();
         perPagePages = 3
+        isAll = true
         search(1, 1)
     }else{
         $('#upcomingEvent').show();
         $('#filterEvent').hide();
         $('#allEvent').hide(); 
+        isAll = false
         perPagePages = 6
         search(1, 0)
     }
