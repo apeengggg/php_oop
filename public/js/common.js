@@ -189,7 +189,7 @@ class CommonJS{
             }
 
             if(permission[i].function_id == function_id){
-                $("#pageTitle").text(permission[i].function_name)
+                // $("#pageTitle").text(permission[i].function_name)
                 $("#breadcrumbTitle").text(permission[i].function_name)
 
                 if(permission[i].can_create == "0"){
