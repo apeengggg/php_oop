@@ -48,7 +48,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card-footer">
+            <div class="card-footer" id="btnAdd">
                 <div class="text-right mt-2">
                     <button type="button" class="btn btn-danger" onclick="clearEventForm()">Clear</button>
                     <button type="button" class="btn btn-primary" onclick="save()">Save</button>

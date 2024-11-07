@@ -66,7 +66,7 @@ $_SESSION['logged_in'] = true;
                                     <h4>No Data</h4>
                                 </div>
                                 <div class="text-right mb-2">
-                                    <button class="btn btn-sm btn-primary" onclick="add(1)">
+                                    <button class="btn btn-sm btn-primary" id="btnAdd" onclick="add(1)">
                                     Add Event
                                     </button>
                                 </div>

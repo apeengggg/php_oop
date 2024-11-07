@@ -157,12 +157,13 @@ class CommonJS{
         console.log("🚀 ~ CommonJS ~ setupPermission ~ function_id:", function_id)
         var data = JSON.parse(sessionStorage.getItem("data"))
         var permission = data.permission
-        var master = []
         var url = window.location.pathname.split("/")
         var len = url.length
         console.log("🚀 ~ CommonJS ~ setupPermission ~ url:", "/"+url[len-1])
         
+        var master = []
         var transaction = []
+        var dashboard = []
         var rows = "";
 
         var data = JSON.parse(sessionStorage.getItem('data'))
@@ -170,6 +171,9 @@ class CommonJS{
         $('#sideBarImage').attr('src', data.image)
 
         for(let i in  permission){
+            if(permission[i].function_id.substring(0,1) === "D" && permission[i].can_read == "1"){
+                dashboard.push(permission[i])
+            }
             if(permission[i].function_id.substring(0,1) === "M" && permission[i].can_read == "1"){
                 master.push(permission[i])
             }
@@ -190,6 +194,27 @@ class CommonJS{
                 if(permission[i].can_delete == "0"){
                     $('[id*="btnDelete"]').remove()
                 }
+            }
+        }
+
+        if(dashboard.length > 0) {
+            rows += `<li class="nav-header" id="#sideBarDashboard">Dashboard</li>`
+            for(let j in dashboard){
+                rows += `<li class="nav-item">`
+                if("/"+url[len-1] === dashboard[j].url){
+                    rows += `<a href="${baseUrl}${dashboard[j].url}" class="nav-link active">`
+                }else{
+                    rows += `<a href="${baseUrl}${dashboard[j].url}" class="nav-link">`
+                }
+
+                rows += `
+                    <i class="nav-icon fas ${dashboard[j].icon}"></i>
+                    <p>
+                        ${dashboard[j].function_name}
+                    </p>
+                </a>
+                </li>
+                `
             }
         }
 

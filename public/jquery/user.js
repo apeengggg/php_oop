@@ -247,6 +247,6 @@ async function save(){
 }
 
 $(async function (){
-    await commonJS.setupPermission("M001");
     await search(initPage)
+    await commonJS.setupPermission("M001");
 });
