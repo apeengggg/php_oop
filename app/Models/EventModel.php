@@ -154,6 +154,36 @@ class Event {
         }
     }
 
+    public function booking($event_id){
+        try{
+            $this->conn->beginTransaction();
+
+            $eventBookingId = uniqid();
+            $user_id = $_SESSION['user']['user_id'];
+
+            $insert = "INSERT INTO r_event_booking (event_booking_id, event_id, user_id) VALUES (:event_booking_id, :event_id, :user_id)";
+            $stmt = $this->conn->prepare($insert);
+            $stmt->bindParam(':event_booking_id', $eventBookingId);
+            $stmt->bindParam(':event_id', $event_id);
+            $stmt->bindParam(':user_id', $user_id);
+            $stmt->execute();
+
+            $availableTicket = "UPDATE m_events SET available_ticket = available_ticket - 1 WHERE event_id = :event_id";
+            $stmt = $this->conn->prepare($availableTicket);
+            $stmt->bindParam(':event_id', $event_id);
+            $stmt->execute();
+
+            $this->conn->commit();
+        }catch(PDOException $e){
+            $this->conn->rollback();
+            echo $this->response->InternalServerError($e->getMessage());
+            exit;
+        }catch(\Exception $e){
+            echo $this->response->InternalServerError($e->getMessage());
+            exit;
+        }
+    }
+
 
     public function findEventByEventId($event_id){
         try{

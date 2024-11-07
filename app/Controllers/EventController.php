@@ -203,8 +203,28 @@ class EventController {
                 exit;
             }
 
-            $delete = $this->eventModel->destroy($_POST['event_id']);
+            $this->eventModel->destroy($_POST['event_id']);
             echo $this->response->Success("Success Delete Data");
+        }catch(\Exception $e){
+            echo $this->response->InternalServerError($e->getMessage());
+        }
+    }
+
+    public function booking(){
+        try{
+            $rules = [
+                'event_id' => ['required'],
+            ];
+
+            $helper = new Validation();
+            $validate = $helper->validate($_POST, $rules);
+            if(!empty($validate)){
+                echo $this->response->BadRequest($validate);
+                exit;
+            }
+
+            $this->eventModel->booking($_POST['event_id']);
+            echo $this->response->Success("Success Booking Event");
         }catch(\Exception $e){
             echo $this->response->InternalServerError($e->getMessage());
         }
