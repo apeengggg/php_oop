@@ -40,7 +40,7 @@ class Response{
     }
 
     public function BadRequest($msg){
-        return $this->createResponse(400, "Bad Request", null, $msg);
+        return $this->createResponse(400, $msg, null, "Bad Request");
     }
 
     public function InternalServerError($error){

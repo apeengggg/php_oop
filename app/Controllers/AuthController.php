@@ -39,7 +39,7 @@ class AuthController{
                 $_SESSION['user'] = $result;
                 echo $this->response->OkLogin($result, 'Login Successfully', $jwt);
             }else{
-                echo $this->response->BadRequest("Login Failed");
+                echo $this->response->BadRequest("Login Failed, Your Credentials Are Incorrect");
             }
         }else{
             echo $this->response->BadRequest("Login Failed");
