@@ -43,14 +43,23 @@ $_SESSION['logged_in'] = true;
                             <div class="card-header">
                                 <h5>Filter Event</h5>
                                 <div class="row">
-                                    <div class="col-md-4 mb-1">
+                                    <div class="col-md-3 mb-1">
                                         <input type="text" class="form-control" id="filterEventName" placeholder="Event Name">
                                     </div>
-                                    <div class="col-md-4 mb-1">
+                                    <div class="col-md-3 mb-1">
                                         <input type="text" class="form-control" id="filterLocation" placeholder="Location">
                                     </div>
-                                    <div class="col-md-4 mb-1">
-                                    <input type="text" readonly class="form-control event-datepicker" id="filterDate" placeholder="Date">
+                                    <div class="col-md-3 mb-1">
+                                        <input type="text" readonly class="form-control event-datepicker" id="filterDate" placeholder="Date">
+                                    </div>
+                                    <div class="col-md-3 mb-1">
+                                        <select name="filterCategory" id="filterCategory" class="form-control">
+                                            <option value="">-- Choose Category --</option>
+                                            <option value="adwqjhw81723">Music</option>
+                                            <option value="adw3qjhw81723">Drama</option>
+                                            <option value="adwqjhw81724">StandUp Comedy</option>
+                                            <option value="adwqjhw81729">Teater</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row justify-content-end mt-2">
@@ -62,13 +71,13 @@ $_SESSION['logged_in'] = true;
                                 <div id="loading" style="display:none;">
                                     Loading ...
                                 </div>
-                                <div id="eventNotFound" style="display:none;">
-                                    <h4>No Data</h4>
-                                </div>
                                 <div class="text-right mb-2">
                                     <button class="btn btn-sm btn-primary" id="btnAdd" onclick="add(1)">
                                     Add Event
                                     </button>
+                                </div>
+                                <div id="eventNotFound" class="text-center" style="display:none;">
+                                    <h4>No Data</h4>
                                 </div>
                                 <div id="eventData">
                                 </div>

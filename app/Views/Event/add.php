@@ -29,11 +29,21 @@
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
+                        <label for="eventCategory">Category</label>
+                        <select name="eventCategory" id="eventCategory" class="form-control">
+                            <option value="">-- Choose Category --</option>
+                            <option value="adwqjhw81723">Music</option>
+                            <option value="adw3qjhw81723">Drama</option>
+                            <option value="adwqjhw81724">StandUp Comedy</option>
+                            <option value="adwqjhw81729">Teater</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
                         <label for="eventLocation">Location</label>
                         <textarea class="form-control" name="eventLocation" id="eventLocation"></textarea>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <label for="eventDescription">Address</label>
                         <textarea class="form-control" name="eventDescription" id="eventDescription"></textarea>
                     </div>

@@ -17,9 +17,11 @@ class Dashboard {
     public function dashboardUser($param, $seeAll = 0) {
         $params = [];
 
-        $query = "SELECT m_events.* FROM " . $this->table_event;
-
+        $query = "SELECT m_events.*, m_categories.category_name FROM " . $this->table_event;
+        $query .= " JOIN m_categories ON m_events.category_id = m_categories.category_id ";
+        
         $countQuery = "SELECT COUNT(*) as total FROM ". $this->table_event;
+        $countQuery .= " JOIN m_categories ON m_events.category_id = m_categories.category_id ";
 
         $query .= ' WHERE 1=1 AND status = 1';
         
@@ -35,6 +37,13 @@ class Dashboard {
             $query .= ' AND LOWER(location) LIKE LOWER(:location) ';
             $countQuery .= ' AND LOWER(location) LIKE LOWER(:location) ';
             $params[':location'] = '%' . $param['location'] . '%';
+        }
+
+        if (!empty($param['category'])) {
+            $query .= ' AND m_events.category_id = :category ';
+            $countQuery .= ' AND m_events.category_id = :category ';
+
+            $params[':category'] = $param['category'];
         }
 
         if (!empty($param['date_start']) && !empty($param['date_end'])) {

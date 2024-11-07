@@ -60,6 +60,7 @@ class EventController {
                 'eventTime' => ['required'],
                 'eventLocation' => ['required'],
                 'eventDescription' => ['required'],
+                'eventCategory' => ['required'],
                 'availableTicket' => ['required', 'numeric'],
             ];
 
@@ -118,6 +119,7 @@ class EventController {
                 'eventTime' => ['required'],
                 'eventLocation' => ['required'],
                 'eventDescription' => ['required'],
+                'eventCategory' => ['required'],
                 'availableTicket' => ['required', 'numeric'],
             ];
 

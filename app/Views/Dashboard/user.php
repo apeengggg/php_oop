@@ -46,14 +46,23 @@ $_SESSION['logged_in'] = true;
                                     <div class="col-6 text-right" onclick="seeAll(0)"><i class="fa-solid fa-xmark"></i></div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4 mb-1">
+                                    <div class="col-md-3 mb-1">
                                         <input type="text" readonly class="form-control event-datepicker" id="filterDate" placeholder="Event Date">
                                     </div>
-                                    <div class="col-md-4 mb-1">
+                                    <div class="col-md-3 mb-1">
                                         <input type="text" class="form-control" id="filterEventName" placeholder="Event Name">
                                     </div>
-                                    <div class="col-md-4 mb-1">
+                                    <div class="col-md-3 mb-1">
                                         <input type="text" class="form-control" id="filterLocation" placeholder="Location">
+                                    </div>
+                                    <div class="col-md-3 mb-1">
+                                        <select name="filterCategory" id="filterCategory" class="form-control">
+                                            <option value="">-- Choose Category --</option>
+                                            <option value="adwqjhw81723">Music</option>
+                                            <option value="adw3qjhw81723">Drama</option>
+                                            <option value="adwqjhw81724">StandUp Comedy</option>
+                                            <option value="adwqjhw81729">Teater</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row justify-content-end mt-2">
@@ -68,10 +77,16 @@ $_SESSION['logged_in'] = true;
                                         <div class="col-6 text-right"><a href="#" onclick="seeAll(1)">See All</a></div>
                                     </div>
                                 </div>
+                                <div id="eventNotFound" class="text-center" style="display:none;">
+                                    <h5>No Data</h5>
+                                </div>
                                 <div id="upcomingEventData" class="horizontal-scroll">
                                 </div>
                             </div>
                             <div class="card-body" id="allEvent" style="display:none;">
+                                <div id="eventNotFoundAll" class="text-center" style="display:none;">
+                                    <h5>No Data</h5>
+                                </div>
                                 <div id="allEventData">
                                 </div>
                                 <nav class="mt-2">

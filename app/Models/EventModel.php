@@ -17,9 +17,13 @@ class Event {
     public function all($param) {
         $params = [];
 
-        $query = "SELECT m_events.*, image FROM " . $this->table;
+        $query = "SELECT m_events.*, image, m_categories.category_name FROM " . $this->table;
 
+        $query .= " JOIN m_categories ON m_events.category_id = m_categories.category_id ";
+        
         $countQuery = "SELECT COUNT(*) as total FROM ". $this->table;
+
+        $countQuery .= " JOIN m_categories ON m_events.category_id = m_categories.category_id ";
 
         $query .= ' WHERE 1=1 AND status = 1 ';
         $countQuery .= ' WHERE 1=1 AND status = 1 ';
@@ -41,6 +45,12 @@ class Event {
             $countQuery .= ' AND date BETWEEN :date_start AND :date_end ';
             $params[':date_start'] = $param['date_start'];
             $params[':date_end'] = $param['date_end'];
+        }
+
+        if (!empty($param['category'])) {
+            $query .= ' AND m_events.category_id = :category ';
+            $countQuery .= ' AND m_events.category_id = :category ';
+            $params[':category'] = $param['category'];
         }
 
         if(!empty($param['orderBy'])) {
@@ -79,7 +89,7 @@ class Event {
     public function store($body, $filename){
         try{
             $event_id = uniqid();
-            $query = "INSERT INTO ".$this->table. " (event_id, event_name, location, date, start_time, description, image, total_ticket, available_ticket) VALUES (:event_id, :event_name, :location, :date, :time, :description, :image, :total_ticket, :available_ticket)";
+            $query = "INSERT INTO ".$this->table. " (event_id, event_name, location, date, start_time, description, image, total_ticket, available_ticket, category_id) VALUES (:event_id, :event_name, :location, :date, :time, :description, :image, :total_ticket, :available_ticket, :category)";
             $stmt = $this->conn->prepare($query);
 
             $stmt->bindParam(':event_id', $event_id);
@@ -90,6 +100,7 @@ class Event {
             $stmt->bindParam(':total_ticket', $body['availableTicket']);
             $stmt->bindParam(':available_ticket', $body['availableTicket']);
             $stmt->bindParam(':description', $body['eventDescription']);
+            $stmt->bindParam(':category', $body['eventCategory']);
             $stmt->bindParam(':image', $filename);
 
             $stmt->execute();
@@ -105,7 +116,7 @@ class Event {
 
     public function update($body, $filename){
         try{
-            $query = "UPDATE ". $this->table . " SET event_name = :event_name, location = :location, date = :date, start_time = :start_time, description = :description, image = :image, total_ticket = :total_ticket, available_ticket = :available_ticket WHERE event_id = :event_id";
+            $query = "UPDATE ". $this->table . " SET event_name = :event_name, location = :location, date = :date, start_time = :start_time, description = :description, image = :image, total_ticket = :total_ticket, available_ticket = :available_ticket, category_id = :category WHERE event_id = :event_id";
             $stmt = $this->conn->prepare($query);
 
             $stmt->bindParam(':event_id', $body['event_id']);
@@ -115,6 +126,7 @@ class Event {
             $stmt->bindParam(':start_time', $body['eventTime']);
             $stmt->bindParam(':description', $body['eventDescription']);
             $stmt->bindParam(':total_ticket', $body['availableTicket']);
+            $stmt->bindParam(':category', $body['eventCategory']);
             $stmt->bindParam(':available_ticket', $body['newAvailableTicket']);
             $stmt->bindParam(':image', $filename);
 

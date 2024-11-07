@@ -73,6 +73,7 @@ function editData(data){
     $('#eventLocation').val(data.location)
     $('#eventDescription').val(data.description)
     $('#availableTicket').val(data.available_ticket)
+    $('#eventCategory').val(data.category_id)
     $('#availableTicket').attr('min', data.available_ticket)
     $('#previewEventImage').attr('src', data.image)
     event_id = data.event_id
@@ -96,6 +97,7 @@ function clearFilter(){
     $('#filterEventName').val('')
     $('#filterLocation').val('')
     $('#filterDate').val('')
+    $('#filterCategory').val('')
     search(1)
 }
 
@@ -164,6 +166,7 @@ function buildTemplate(index, data){
                 <h4>${data[index].event_name}</h4>
                 <p class="card-text">${data[index].description}</p>
                 <hr>
+                <p class="card-text">Category: ${data[index].category_name}</p>
                 <p class="card-text">Total Ticket: ${data[index].total_ticket}</p>
                 <p class="card-text">Available Ticket: ${data[index].available_ticket}</p>
                 <hr>
@@ -201,6 +204,10 @@ async function search(page){
 
     if($('#filterLocation').val()){
         param += `&location=${$('#filterLocation').val()}`
+    }
+
+    if($('#filterCategory').val()){
+        param += `&category=${$('#filterCategory').val()}`
     }
 
     if($('#filterDate').val()){
@@ -252,6 +259,7 @@ async function save(){
     var eventLocation = $('#eventLocation').val()
     var eventDescription = $('#eventDescription').val()
     var availableTicket = $('#availableTicket').val()
+    var eventCategory = $('#eventCategory').val()
 
     var error = []
     if(eventName == ''){
@@ -281,6 +289,10 @@ async function save(){
         error.push("Available Must Be Greater Than 0")
     }
 
+    if(eventCategory == ''){
+        error.push("Category Ticket Required")
+    }
+
     if(error.length > 0){
         commonJS.toast(error.toString(), true)
         return;
@@ -293,6 +305,7 @@ async function save(){
     formData.append("eventLocation", eventLocation)
     formData.append("eventDescription", eventDescription)
     formData.append("availableTicket", availableTicket)
+    formData.append("eventCategory", eventCategory)
     if(isEdit){
         formData.append("event_id", event_id)
     }

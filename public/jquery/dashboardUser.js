@@ -36,6 +36,7 @@ function clearFilter(){
     $('#filterEventName').val('')
     $('#filterLocation').val('')
     $('#filterDate').val('')
+    $('#filterCategory').val('')
     search(1, 1)
 }
 
@@ -104,6 +105,7 @@ function buildTemplate(index, data){
                 <h4>${data[index].event_name}</h4>
                 <p class="card-text">${data[index].description}</p>
                 <hr>
+                <p class="card-text">Category: ${data[index].category_name}</p>
                 <p class="card-text">Total Ticket: ${data[index].total_ticket}</p>
                 <p class="card-text">Available Ticket: <b>${available_ticket}</b></p>
                 <hr>
@@ -154,6 +156,10 @@ async function search(page, seeAll = 0){
         param += `&location=${$('#filterLocation').val()}`
     }
 
+    if($('#filterCategory').val()){
+        param += `&category=${$('#filterCategory').val()}`
+    }
+
     if($('#filterDate').val()){
         let date = $('#filterDate').val()
         date = date.split(' - ')
@@ -167,6 +173,7 @@ async function search(page, seeAll = 0){
     }
     $(".template-data").remove()
     $('#eventNotFound').show()
+    $('#eventNotFoundAll').show()
     const pagination = document.getElementById('pagination');
     pagination.innerHTML = '';
     await commonJS.get('/dashboard-user/get'+param, async (response)=> {
@@ -174,6 +181,7 @@ async function search(page, seeAll = 0){
         if(response.status == 200){
             if(response.data.length > 0){
                 $('#eventNotFound').hide()
+                $('#eventNotFoundAll').hide()
                 var rows = ''
 
                 rows = await Promise.all(

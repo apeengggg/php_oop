@@ -45,11 +45,8 @@ class DashboardController {
             }
 
             $data = $this->dsModel->dashboardUser($param, $seeAll);
-            // var_dump($data);
             header('Content-Type: application/json');
             if(isset($data['totalPages'])){
-                // var_dump($data);
-                // exit;
                 echo $this->response->OkPaging($data['data'], "Success Get Data", $data['totalPages']);
             }else{
                 echo $this->response->Ok($data['data'], "Success Get Data");
