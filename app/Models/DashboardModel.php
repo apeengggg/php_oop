@@ -19,46 +19,38 @@ class Dashboard {
 
         $query = "SELECT m_events.* FROM " . $this->table_event;
 
-        if($seeAll === 1){
-            $countQuery = "SELECT COUNT(*) as total FROM ". $this->table_event;
-            $countQuery .= ' WHERE 1=1 AND status = 1 ';
-        }
+        $countQuery = "SELECT COUNT(*) as total FROM ". $this->table_event;
 
         $query .= ' WHERE 1=1 AND status = 1';
+        
+        $countQuery .= ' WHERE 1=1 AND status = 1 ';
 
         if (!empty($param['event_name'])) {
             $query .= ' AND LOWER(event_name) LIKE LOWER(:event_name) ';
-            if($seeAll === 1){
-                $countQuery .= ' AND LOWER(event_name) LIKE LOWER(:event_name) ';
-            }
+            $countQuery .= ' AND LOWER(event_name) LIKE LOWER(:event_name) ';
             $params[':event_name'] = '%' . $param['event_name'] . '%';
         }
 
         if (!empty($param['location'])) {
             $query .= ' AND LOWER(location) LIKE LOWER(:location) ';
-            if($seeAll === 1){
-                $countQuery .= ' AND LOWER(location) LIKE LOWER(:location) ';
-            }
+            $countQuery .= ' AND LOWER(location) LIKE LOWER(:location) ';
             $params[':location'] = '%' . $param['location'] . '%';
         }
 
         if (!empty($param['date_start']) && !empty($param['date_end'])) {
             $query .= ' AND date BETWEEN :date_start AND :date_end ';
-            if($seeAll === 1){
-                $countQuery .= ' AND date BETWEEN :date_start AND :date_end ';
-            }
+            $countQuery .= ' AND date BETWEEN :date_start AND :date_end ';
+
             $params[':date_start'] = $param['date_start'];
             $params[':date_end'] = $param['date_end'];
         }else{
             $query .= ' AND date >= CURDATE()';
+            $countQuery .= ' AND date >= CURDATE()';
         }
 
         if(!empty($param['orderBy'])) {
-            if($seeAll === 1){
-                $query .= ' ORDER BY '. $param['orderBy'].' '.$param['dir'];
-            }else{
-                $query .= ' ORDER BY date ASC';
-            }
+            $query .= ' ORDER BY '. $param['orderBy'].' '.$param['dir'];
+            $countQuery .= ' ORDER BY '. $param['orderBy'].' '.$param['dir'];
         }else{
             $query .= ' ORDER BY date ASC';
         }

@@ -159,7 +159,7 @@ function buildTemplate(index, data){
     `
     rows += `
         <div class="card template-data" style="width: 18rem;">
-            <img src="${data[index].image}" class="card-img-top" alt="${data[index].event_name}">
+            <img src="${data[index].image}" class="card-img-top" height="300" alt="${data[index].event_name}">
             <div class="card-body">
                 <h4>${data[index].event_name}</h4>
                 <p class="card-text">${data[index].description}</p>
