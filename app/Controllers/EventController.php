@@ -223,6 +223,14 @@ class EventController {
                 exit;
             }
 
+            $event = $this->eventModel->findEventByEventId($_POST['event_id']);
+            if(!empty($event)){
+                if($event['available_ticket'] <= 0){
+                    echo $this->response->BadRequest("Event Ticket Not Available");
+                    exit;
+                }
+            }
+
             $this->eventModel->booking($_POST['event_id']);
             echo $this->response->Success("Success Booking Event");
         }catch(\Exception $e){

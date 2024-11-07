@@ -94,6 +94,8 @@ function buildTemplate(index, data){
     let date = moment(data[index].date).format('DD MMMM YYYY')
     let time = data[index].start_time.slice(0, 5) + " WIB";
 
+    let available_ticket = data[index].available_ticket <= 0 ? 'Ticket Sold Out' : data[index].available_ticket
+
     rows += `
         <div class="card template-data" style="width: 18rem;">
             <img src="${data[index].image}" class="card-img-top" alt="${data[index].event_name}">
@@ -102,7 +104,7 @@ function buildTemplate(index, data){
                 <p class="card-text">${data[index].description}</p>
                 <hr>
                 <p class="card-text">Total Ticket: ${data[index].total_ticket}</p>
-                <p class="card-text">Available Ticket: ${data[index].available_ticket}</p>
+                <p class="card-text">Available Ticket: <b>${available_ticket}</b></p>
                 <hr>
                 <p class="card-text">Date: ${date}</p>
                 <p class="card-text">Time: ${time}</p>
