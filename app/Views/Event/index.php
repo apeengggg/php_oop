@@ -43,13 +43,13 @@ $_SESSION['logged_in'] = true;
                             <div class="card-header">
                                 <h5>Filter Event</h5>
                                 <div class="row">
-                                    <div class="col">
+                                    <div class="col-md-4 mb-1">
                                         <input type="text" class="form-control" id="filterEventName" placeholder="Event Name">
                                     </div>
-                                    <div class="col">
+                                    <div class="col-md-4 mb-1">
                                         <input type="text" class="form-control" id="filterLocation" placeholder="Location">
                                     </div>
-                                    <div class="col">
+                                    <div class="col-md-4 mb-1">
                                     <input type="text" readonly class="form-control event-datepicker" id="filterDate" placeholder="Date">
                                     </div>
                                 </div>

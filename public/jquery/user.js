@@ -111,10 +111,10 @@ function buildTemplate(index, data){
     var rows = ""
     var string = JSON.stringify(data[index])
     var button = `
-    <button id="btnEdit${index+1}" class='btn btn-sm btn-primary' onclick='editData(${string})'>
+    <button id="btnEdit${index+1}" class='btn btn-sm btn-primary mb-1' onclick='editData(${string})'>
         <i class='fas fa-edit'></i>
     </button>
-    <button id="btnDelete${index+1}" class='btn btn-sm btn-danger ml-2' onclick='deleteData("${data[index].user_id}")'>
+    <button id="btnDelete${index+1}" class='btn btn-sm btn-danger ml-2 mb-1' onclick='deleteData("${data[index].user_id}")'>
         <i class='fas fa-trash'></i>
     </button>
     `

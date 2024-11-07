@@ -43,17 +43,17 @@ $_SESSION['logged_in'] = true;
                         <div class="card">
                             <div class="card-header" style="display:none;" id="filterEvent">
                                 <div class="row">
-                                    <div class="col-md-6 text-left"><h5>Filter Event</h5></div>
-                                    <div class="col-md-6 text-right" onclick="seeAll(0)"><i class="fa-solid fa-xmark"></i></div>
+                                    <div class="col-6 text-left"><h5>Filter Event</h5></div>
+                                    <div class="col-6 text-right" onclick="seeAll(0)"><i class="fa-solid fa-xmark"></i></div>
                                 </div>
                                 <div class="row">
-                                    <div class="col">
+                                    <div class="col-md-4 mb-1">
                                         <input type="text" readonly class="form-control event-datepicker" id="filterDate" placeholder="Event Date">
                                     </div>
-                                    <div class="col">
+                                    <div class="col-md-4 mb-1">
                                         <input type="text" class="form-control" id="filterEventName" placeholder="Event Name">
                                     </div>
-                                    <div class="col">
+                                    <div class="col-md-4 mb-1">
                                         <input type="text" class="form-control" id="filterLocation" placeholder="Location">
                                     </div>
                                 </div>

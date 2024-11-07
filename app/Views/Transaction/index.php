@@ -32,13 +32,13 @@ $_SESSION['logged_in'] = true;
                             <div class="card-header">
                                 <h5>Filter Transaction</h5>
                                 <div class="row">
-                                    <div class="col">
+                                    <div class="col-md-4 mb-1">
                                         <input type="text" readonly class="form-control event-datepicker" id="filterDate" placeholder="Event Date">
                                     </div>
-                                    <div class="col">
+                                    <div class="col-md-4 mb-1">
                                         <input type="text" class="form-control" id="filterEventName" placeholder="Event Name">
                                     </div>
-                                    <div class="col">
+                                    <div class="col-md-4 mb-1">
                                         <input type="text" class="form-control" id="filterUsername" placeholder="Username">
                                     </div>
                                 </div>
@@ -47,7 +47,7 @@ $_SESSION['logged_in'] = true;
                                     <button class="btn btn-sm btn-primary" onclick="search(1)">Search</button>
                                 </div>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body table-responsive">
                                 <table id="transactionData" class="table table-striped table-hover text-center" style="width:100%">
                                     <thead>
                                         <tr>
