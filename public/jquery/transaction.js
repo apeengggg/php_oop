@@ -87,6 +87,9 @@ function buildTemplate(index, data){
     }
     
     var button = `
+    <button id="btnEdit${index+1}" class='btn btn-sm btn-primary ml-2' onclick='checkIn("${data[index].event_booking_id}")'>
+        <i class="fa-solid fa-receipt"></i>
+    </button>
     <button id="btnDelete${index+1}" class='btn btn-sm btn-danger ml-2' onclick='deleteData("${data[index].event_booking_id}")'>
         <i class='fas fa-trash'></i>
     </button>
@@ -122,7 +125,6 @@ function buildTemplate(index, data){
     
     rows += '<td>'+ data[index].event_name +'</td>'
     rows += '<td>'+ date +'</td>'
-    rows += '<td>'+ time +'</td>'
     rows += '<td>'+ badge +'</td>'
     rows += '<td>'+ created_dt +'</td>'
     rows += '<td>'+ updated_dt || '-' +'</td>'
