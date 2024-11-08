@@ -200,5 +200,36 @@ class TransactionController {
         }
     }
 
+    public function checkIn(){
+        try{
+            $rules = [
+                'event_booking_id' => ['required'],
+            ];
+
+            $helper = new Validation();
+            $validate = $helper->validate($_POST, $rules);
+            if(!empty($validate)){
+                echo $this->response->BadRequest($validate);
+                exit;
+            }
+
+            $event = $this->trModel->getEventByEventBookingId($_POST['event_booking_id']);
+            if(empty($event)){
+                echo $this->response->BadRequest("Event Not Found");
+                exit;
+            }
+
+            if($event['date'] != date('Y-m-d')){
+                echo $this->response->BadRequest("Can't check in today, check in on the day of the event");
+                exit;
+            }
+
+            $delete = $this->trModel->checkIn($_POST['event_booking_id']);
+            echo $this->response->Success('Success CheckIn Ticket');
+        }catch(\Exception $e){
+            echo $this->response->InternalServerError($e->getMessage());
+        }
+    }
+
 
 }

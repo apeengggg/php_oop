@@ -113,6 +113,11 @@ switch ($uri){
         $roleMiddleware->handle('T001', 'can_delete');
         $trController->destroy();
         break;
+    case '/transaction/checkin':
+        $jwt->handle();
+        $roleMiddleware->handle('T001', 'can_update');
+        $trController->checkIn();
+        break;
     case '/dashboard':
         $dsController->index();
         break;

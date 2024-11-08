@@ -286,6 +286,6 @@ async function save(){
 $(async function (){
     $('.event-datepicker').val('');
     $('#eventDate').val('');
-    await search(initPage)
     await commonJS.setupPermission("D001");
+    await search(initPage)
 });

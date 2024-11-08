@@ -75,6 +75,17 @@ function renderPagination(totalPages, currentPage) {
     }
 }
 
+function checkIn(event_booking_id){
+    commonJS.swalConfirmAjax('Are you sure checked in this ticket?', 'Yes', 'No', commonJS.exec, {event_booking_id: event_booking_id} , 'POST', '/transaction/checkin', (response)=> {
+        if(response.status == 200){
+            commonJS.toast(response.message, false)
+            search(1)
+        }else{
+            commonJS.toast(response.message, true)
+        }
+    })
+}
+
 function buildTemplate(index, data){
     var rows = ""
 
@@ -195,74 +206,19 @@ async function search(page){
     commonJS.loading(false)
 }
 
-async function save(){
-    var name = $('#userName').val()
-    var username = $('#userUsername').val()
-    var role = $('#userRole').val()
-    var password = $('#userPassword').val()
-
-    var error = []
-    if(name == ''){
-        error.push("Name Required")
-    }
-
-    if(username == ''){
-        error.push("Username Required")
-    }
-
-    if(role == ''){
-        error.push("Role Required")
-    }
-
-    if(password == '' && !isEdit){
-        error.push("Password Required")
-    }
-
-    if(error.length > 0){
-        commonJS.toast(error.toString(), true)
-        return;
-    }
-
-    var formData = new FormData()
-    formData.append("name", name)
-    formData.append("username", username)
-    formData.append("role", role)
-    if(!isEdit){
-        formData.append("password", password)
-    }else{
-        formData.append("event_booking_id", event_booking_id)
-    }
-    
-    if($('#imageInput')[0].files[0]){
-        // console.log("🚀 ~ save ~ $('#imageInput')[0].files[0]:", $('#imageInput')[0].files[0])
-        formData.append("image", $('#imageInput')[0].files[0])
-    }
-
-    let url = isEdit ? '/transaction/put' : '/transaction/post'
-
-    commonJS.swalConfirmAjax("Do you want to save this data?", "Yes", "No", commonJS.execUpload, formData, 'POST', url, async (response) => {
-        console.log("🚀 ~ commonJS.execUpload ~ response:", response)
-        if(response.status == 200){
-            commonJS.toast(response.message, false)
-            await search(1)
-        }else{
-            commonJS.toast(response.message, true)
-        }
-    })
-}
-
 function checkIsUser(){
     var data = JSON.parse(sessionStorage.getItem('data'))
     if(data.role_id === '2'){
         isUser = true
         $('#filterUsername').remove()
         $('#usernameColumn').remove()
+        $('[id*="btnEdit"]').remove()
     }
 }
 
 $(async function (){
     $('#filterDate').val('')
     checkIsUser()
-    await commonJS.setupPermission("T001");
     await search(initPage)
+    await commonJS.setupPermission("T001");
 });

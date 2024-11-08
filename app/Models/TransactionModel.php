@@ -184,11 +184,51 @@ class Transaction {
     }
 
 
+
+    public function checkIn($event_booking_id){
+        try{
+            $this->conn->beginTransaction();
+
+            $date = date('Y-m-d H:i:s');
+
+            $query = "UPDATE " . $this->table . " SET status = 3, updated_by = :updated_by, updated_dt = :updated_dt WHERE event_booking_id = :event_booking_id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':event_booking_id', $event_booking_id);
+            $stmt->bindParam(':updated_by', $_SESSION['user']['user_id']);
+            $stmt->bindParam(':updated_dt', $date);
+            $stmt->execute();
+        }catch(PDOException $e){
+            echo $this->response->InternalServerError($e->getMessage());
+            exit;
+        }catch(\Exception $e){
+            echo $this->response->InternalServerError($e->getMessage());
+            exit;
+        }
+    }
+
+
     public function findEventByEventId($event_id){
         try{
             $query = "SELECT event_id, image FROM " . $this->table . " WHERE event_id = :event_id";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':event_id', $event_id);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }catch(PDOException $e){
+            echo $this->response->InternalServerError($e->getMessage());
+            exit;
+        }catch(\Exception $e){
+            echo $this->response->InternalServerError($e->getMessage());
+            exit;
+        }
+    }
+
+
+    public function getEventByEventBookingId($event_booking_id){
+        try{
+            $query = "SELECT m_events.event_id, date FROM " . $this->table . " JOIN m_events ON r_event_booking.event_id = m_events.event_id WHERE event_booking_id = :event_booking_id ";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':event_booking_id', $event_booking_id);
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }catch(PDOException $e){
