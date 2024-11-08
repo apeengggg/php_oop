@@ -1,7 +1,7 @@
-var orderBy = 'event_booking_id'
+var orderBy = 'created_dt'
 var initPage = 1;
 var perPagePages = 10;
-var dir = 'asc';
+var dir = 'desc';
 var isEdit = false;
 var event_booking_id = '';
 var isUser = false
@@ -80,6 +80,11 @@ function buildTemplate(index, data){
 
     var date = moment(data[index].date).format('DD MMMM YYYY')
     var time = data[index].start_time.slice(0, 5) + " WIB";
+    let created_dt = moment(data[index].created_dt).format('DD MMMM YYYY HH:mm:ss')
+    let updated_dt = moment(data[index].updated_dt).format('DD MMMM YYYY HH:mm:ss')
+    if(data[index].updated_dt === '0000-00-00 00:00:00'){
+        updated_dt = '-'
+    }
     
     var button = `
     <button id="btnDelete${index+1}" class='btn btn-sm btn-danger ml-2' onclick='deleteData("${data[index].event_booking_id}")'>
@@ -119,6 +124,8 @@ function buildTemplate(index, data){
     rows += '<td>'+ date +'</td>'
     rows += '<td>'+ time +'</td>'
     rows += '<td>'+ badge +'</td>'
+    rows += '<td>'+ created_dt +'</td>'
+    rows += '<td>'+ updated_dt || '-' +'</td>'
     rows += '<td>'+ button +'</td>'
     rows += '</tr>'
 

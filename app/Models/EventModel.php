@@ -144,13 +144,17 @@ class Event {
         try{
             $this->conn->beginTransaction();
 
+            $date = date('Y-m-d H:i:s');
+
             $query = "UPDATE " . $this->table . " SET status = 0 WHERE event_id = :event_id";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':event_id', $event_id);
 
-            $queryTr = "UPDATE r_event_booking SET status = 2 WHERE event_id = :event_id";
+            $queryTr = "UPDATE r_event_booking SET status = 2, updated_by = :updated_by, updated_dt = :updated_dt WHERE event_id = :event_id";
             $stmtTr = $this->conn->prepare($queryTr);
             $stmtTr->bindParam(':event_id', $event_id);
+            $stmtTr->bindParam(':updated_by', $_SESSION['user']['user_id']);
+            $stmtTr->bindParam(':updated_dt', $date);
 
             $stmt->execute();
             $stmtTr->execute();
@@ -172,12 +176,15 @@ class Event {
 
             $eventBookingId = uniqid();
             $user_id = $_SESSION['user']['user_id'];
+            $date = date('Y-m-d H:i:s');
 
-            $insert = "INSERT INTO r_event_booking (event_booking_id, event_id, user_id) VALUES (:event_booking_id, :event_id, :user_id)";
+            $insert = "INSERT INTO r_event_booking (event_booking_id, event_id, user_id, created_by, created_dt) VALUES (:event_booking_id, :event_id, :user_id, :created_by, :created_dt)";
             $stmt = $this->conn->prepare($insert);
             $stmt->bindParam(':event_booking_id', $eventBookingId);
             $stmt->bindParam(':event_id', $event_id);
             $stmt->bindParam(':user_id', $user_id);
+            $stmt->bindParam(':created_by', $_SESSION['user']['user_id']);
+            $stmt->bindParam(':created_dt', $date);
             $stmt->execute();
 
             $availableTicket = "UPDATE m_events SET available_ticket = available_ticket - 1 WHERE event_id = :event_id";

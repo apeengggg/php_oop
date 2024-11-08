@@ -15,7 +15,7 @@ class Transaction {
     public function all($param, $user_id = null) {
         $params = [];
 
-        $query = "SELECT r_event_booking.event_booking_id, r_event_booking.status AS status_ticket, m_events.*, m_users.username FROM " . $this->table;
+        $query = "SELECT r_event_booking.event_booking_id, r_event_booking.status AS status_ticket, created_dt, updated_dt, m_events.*, m_users.username FROM " . $this->table;
 
         $countQuery = "SELECT COUNT(*) as total FROM ". $this->table;
 
@@ -97,7 +97,10 @@ class Transaction {
     public function store($body, $filename){
         try{
             $event_id = uniqid();
-            $query = "INSERT INTO ".$this->table. " (event_id, event_name, location, date, start_time, description, image) VALUES (:event_id, :event_name, :location, :date, :time, :description, :image)";
+
+            $date = date('Y-m-d H:i:s');
+
+            $query = "INSERT INTO ".$this->table. " (event_id, event_name, location, date, start_time, description, image, created_by, created_dt) VALUES (:event_id, :event_name, :location, :date, :time, :description, :image, :created_by, :created_dt)";
             $stmt = $this->conn->prepare($query);
 
             $stmt->bindParam(':event_id', $event_id);
@@ -107,6 +110,8 @@ class Transaction {
             $stmt->bindParam(':time', $body['eventTime']);
             $stmt->bindParam(':description', $body['eventDescription']);
             $stmt->bindParam(':image', $filename);
+            $stmt->bindParam(':created_by', $_SESSION['user']['user_id']);
+            $stmt->bindParam(':created_dt', $date);
 
             $stmt->execute();
             return true;
@@ -121,7 +126,8 @@ class Transaction {
 
     public function update($body, $filename){
         try{
-            $query = "UPDATE ". $this->table . " SET event_name = :event_name, location = :location, date = :date, start_time = :start_time, description = :description, image = :image WHERE event_id = :event_id";
+            $date = date('Y-m-d H:i:s');
+            $query = "UPDATE ". $this->table . " SET event_name = :event_name, location = :location, date = :date, start_time = :start_time, description = :description, image = :image, updated_by = :updated_by, updated_dt = :updated_dt WHERE event_id = :event_id";
             $stmt = $this->conn->prepare($query);
 
             $stmt->bindParam(':event_id', $body['event_id']);
@@ -131,6 +137,8 @@ class Transaction {
             $stmt->bindParam(':start_time', $body['eventTime']);
             $stmt->bindParam(':description', $body['eventDescription']);
             $stmt->bindParam(':image', $filename);
+            $stmt->bindParam(':updated_by', $_SESSION['user']['user_id']);
+            $stmt->bindParam(':updated_dt', $date);
 
             $stmt->execute();
             return true;
@@ -147,9 +155,13 @@ class Transaction {
         try{
             $this->conn->beginTransaction();
 
-            $query = "UPDATE " . $this->table . " SET status = 0 WHERE event_booking_id = :event_booking_id";
+            $date = date('Y-m-d H:i:s');
+
+            $query = "UPDATE " . $this->table . " SET status = 0, updated_by = :updated_by, updated_dt = :updated_dt WHERE event_booking_id = :event_booking_id";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':event_booking_id', $event_booking_id);
+            $stmt->bindParam(':updated_by', $_SESSION['user']['user_id']);
+            $stmt->bindParam(':updated_dt', $date);
             $stmt->execute();
 
             $select_event = "SELECT event_id FROM r_event_booking WHERE event_booking_id = :event_booking_id";
