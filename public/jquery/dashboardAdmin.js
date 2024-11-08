@@ -86,11 +86,6 @@ function dataChart(data){
         type: 'bar',
         data: chart,
         options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            },
             plugins: {
                 legend: {
                     display: false
