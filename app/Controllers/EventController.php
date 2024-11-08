@@ -57,7 +57,6 @@ class EventController {
             $rules = [
                 'eventName' => ['required'],
                 'eventDate' => ['required'],
-                'eventTime' => ['required'],
                 'eventLocation' => ['required'],
                 'eventDescription' => ['required'],
                 'eventCategory' => ['required'],
@@ -116,7 +115,6 @@ class EventController {
                 'event_id' => ['required'],
                 'eventName' => ['required'],
                 'eventDate' => ['required'],
-                'eventTime' => ['required'],
                 'eventLocation' => ['required'],
                 'eventDescription' => ['required'],
                 'eventCategory' => ['required'],

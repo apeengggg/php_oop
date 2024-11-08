@@ -25,8 +25,8 @@ class Event {
 
         $countQuery .= " JOIN m_categories ON m_events.category_id = m_categories.category_id ";
 
-        $query .= ' WHERE 1=1 AND status = 1 ';
-        $countQuery .= ' WHERE 1=1 AND status = 1 ';
+        $query .= ' WHERE 1=1 AND m_events.status = 1 ';
+        $countQuery .= ' WHERE 1=1 AND m_events.status = 1 ';
 
         if (!empty($param['event_name'])) {
             $query .= ' AND LOWER(event_name) LIKE LOWER(:event_name) ';
@@ -89,14 +89,13 @@ class Event {
     public function store($body, $filename){
         try{
             $event_id = uniqid();
-            $query = "INSERT INTO ".$this->table. " (event_id, event_name, location, date, start_time, description, image, total_ticket, available_ticket, category_id) VALUES (:event_id, :event_name, :location, :date, :time, :description, :image, :total_ticket, :available_ticket, :category)";
+            $query = "INSERT INTO ".$this->table. " (event_id, event_name, location, date, description, image, total_ticket, available_ticket, category_id) VALUES (:event_id, :event_name, :location, :date, :description, :image, :total_ticket, :available_ticket, :category)";
             $stmt = $this->conn->prepare($query);
 
             $stmt->bindParam(':event_id', $event_id);
             $stmt->bindParam(':event_name', $body['eventName']);
             $stmt->bindParam(':location', $body['eventLocation']);
             $stmt->bindParam(':date', $body['eventDate']);
-            $stmt->bindParam(':time', $body['eventTime']);
             $stmt->bindParam(':total_ticket', $body['availableTicket']);
             $stmt->bindParam(':available_ticket', $body['availableTicket']);
             $stmt->bindParam(':description', $body['eventDescription']);
@@ -116,14 +115,13 @@ class Event {
 
     public function update($body, $filename){
         try{
-            $query = "UPDATE ". $this->table . " SET event_name = :event_name, location = :location, date = :date, start_time = :start_time, description = :description, image = :image, total_ticket = :total_ticket, available_ticket = :available_ticket, category_id = :category WHERE event_id = :event_id";
+            $query = "UPDATE ". $this->table . " SET event_name = :event_name, location = :location, date = :date, description = :description, image = :image, total_ticket = :total_ticket, available_ticket = :available_ticket, category_id = :category WHERE event_id = :event_id";
             $stmt = $this->conn->prepare($query);
 
             $stmt->bindParam(':event_id', $body['event_id']);
             $stmt->bindParam(':event_name', $body['eventName']);
             $stmt->bindParam(':location', $body['eventLocation']);
             $stmt->bindParam(':date', $body['eventDate']);
-            $stmt->bindParam(':start_time', $body['eventTime']);
             $stmt->bindParam(':description', $body['eventDescription']);
             $stmt->bindParam(':total_ticket', $body['availableTicket']);
             $stmt->bindParam(':category', $body['eventCategory']);

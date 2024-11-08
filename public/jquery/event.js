@@ -171,7 +171,6 @@ function buildTemplate(index, data){
                 <p class="card-text">Available Ticket: ${data[index].available_ticket}</p>
                 <hr>
                 <p class="card-text">Date: ${date}</p>
-                <p class="card-text">Time: ${time}</p>
                 <p class="card-text">${data[index].location}</p>
             </div>
             <div class="card-body text-right">
@@ -255,7 +254,6 @@ async function search(page){
 async function save(){
     var eventName = $('#eventName').val()
     var eventDate = $('#eventDate').val()
-    var eventTime = $('#eventTime').val()
     var eventLocation = $('#eventLocation').val()
     var eventDescription = $('#eventDescription').val()
     var availableTicket = $('#availableTicket').val()
@@ -268,10 +266,6 @@ async function save(){
 
     if(eventDate == ''){
         error.push("Event Date Required")
-    }
-
-    if(eventTime == ''){
-        error.push("Event Time Required")
     }
 
     if(eventLocation == ''){
@@ -301,7 +295,6 @@ async function save(){
     var formData = new FormData()
     formData.append("eventName", eventName)
     formData.append("eventDate", moment(eventDate, 'DD/MM/YYYY').format('YYYY-MM-DD'))
-    formData.append("eventTime", eventTime)
     formData.append("eventLocation", eventLocation)
     formData.append("eventDescription", eventDescription)
     formData.append("availableTicket", availableTicket)
