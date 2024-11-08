@@ -33,6 +33,7 @@ function clearFilter(){
     $('#filterEventName').val('')
     $('#filterUsername').val('')
     $('#filterDate').val('')
+    $('#filterBookingId').val('')
     search(1)
 }
 
@@ -127,6 +128,7 @@ function buildTemplate(index, data){
     var badge = `<span class="badge badge-${status_badge}">${status}</span>`
 
     rows += '<tr class="template-data">'
+    rows += '<td>'+ data[index].event_booking_id +'</td>'
     if(!isUser){
         rows += '<td>'
             rows += data[index].username
@@ -165,6 +167,10 @@ async function search(page){
 
     if($('#filterUsername').val()){
         param += `&username=${$('#filterUsername').val()}`
+    }
+
+    if($('#filterBookingId').val()){
+        param += `&event_booking_id=${$('#filterBookingId').val()}`
     }
 
     if($('#filterDate').val()){

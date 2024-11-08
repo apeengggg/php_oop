@@ -44,6 +44,12 @@ class Transaction {
             $params[':user_id'] = $user_id != null ? $user_id : $param['user_id'];
         }
 
+        if (!empty($param['event_booking_id'])) {
+            $query .= 'AND r_event_booking.event_booking_id = :event_booking_id ';
+            $countQuery .= 'AND r_event_booking.event_booking_id = :event_booking_id ';
+            $params[':event_booking_id'] = $param['event_booking_id'];
+        }
+
         // var_dump($query);
 
         if (!empty($param['username'])) {

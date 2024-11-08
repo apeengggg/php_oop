@@ -115,6 +115,6 @@ async function search(){
 }
 
 $(async function (){
-    await search()
     await commonJS.setupPermission("D001");
+    await search()
 });

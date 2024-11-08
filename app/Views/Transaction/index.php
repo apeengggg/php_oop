@@ -32,13 +32,16 @@ $_SESSION['logged_in'] = true;
                             <div class="card-header">
                                 <h5>Filter Transaction</h5>
                                 <div class="row">
-                                    <div class="col-md-4 mb-1">
+                                    <div class="col-md-3 mb-1">
+                                        <input type="text" class="form-control" id="filterBookingId" placeholder="Booking Id">
+                                    </div>
+                                    <div class="col-md-3 mb-1">
                                         <input type="text" readonly class="form-control event-datepicker" id="filterDate" placeholder="Event Date">
                                     </div>
-                                    <div class="col-md-4 mb-1">
+                                    <div class="col-md-3 mb-1">
                                         <input type="text" class="form-control" id="filterEventName" placeholder="Event Name">
                                     </div>
-                                    <div class="col-md-4 mb-1">
+                                    <div class="col-md-3 mb-1">
                                         <input type="text" class="form-control" id="filterUsername" placeholder="Username">
                                     </div>
                                 </div>
@@ -51,6 +54,9 @@ $_SESSION['logged_in'] = true;
                                 <table id="transactionData" class="table table-striped table-hover text-center" style="width:100%">
                                     <thead>
                                         <tr>
+                                            <th id="bookingIdColumn" onclick="orderDynamically('event_booking_id')">
+                                                Booking ID
+                                            </th>
                                             <th id="usernameColumn" onclick="orderDynamically('username')">
                                                 Username
                                             </th>    
@@ -63,10 +69,10 @@ $_SESSION['logged_in'] = true;
                                             <th id="eventPresentColumn" onclick="orderDynamically('status')">
                                                 Status
                                             </th>
-                                            <th id="eventPresentColumn" onclick="orderDynamically('created_dt')">
+                                            <th id="eventCreatedDateColumn" onclick="orderDynamically('created_dt')">
                                                 Created Date
                                             </th>
-                                            <th id="eventPresentColumn" onclick="orderDynamically('updated_dt')">
+                                            <th id="eventUpdatedDateColumn" onclick="orderDynamically('updated_dt')">
                                                 Updated Date
                                             </th>
                                             <th width="105px">Action</th>
