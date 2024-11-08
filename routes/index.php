@@ -121,6 +121,11 @@ switch ($uri){
         $roleMiddleware->handle('D001', 'can_read');
         $dsController->getUser();
         break;
+    case '/dashboard-admin/get':
+        $jwt->handle();
+        $roleMiddleware->handle('D001', 'can_read');
+        $dsController->getAdmin();
+        break;
     default:
         $authController->notfound();
     

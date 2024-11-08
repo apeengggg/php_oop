@@ -55,4 +55,16 @@ class DashboardController {
             echo $this->response->InternalServerError($e->getMessage());
         }
     }
+
+    public function getAdmin(){
+        try{
+
+            $data = $this->dsModel->dashboardAdmin();
+            header('Content-Type: application/json');
+
+            echo $this->response->Ok($data, "Success Get Data");
+        }catch(\Exception $e){
+            echo $this->response->InternalServerError($e->getMessage());
+        }
+    }
 }

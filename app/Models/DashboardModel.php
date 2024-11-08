@@ -3,7 +3,7 @@ require_once __DIR__.'/../Helpers/Response.php';
 
 class Dashboard {
     private $conn;
-    private $table_event = "m_events";
+    private $table_event = "m_events AS e";
     protected $response;
 
     public function __construct($db) {
@@ -17,15 +17,15 @@ class Dashboard {
     public function dashboardUser($param, $seeAll = 0) {
         $params = [];
 
-        $query = "SELECT m_events.*, m_categories.category_name FROM " . $this->table_event;
-        $query .= " JOIN m_categories ON m_events.category_id = m_categories.category_id ";
+        $query = "SELECT e.*, m_categories.category_name FROM " . $this->table_event;
+        $query .= " JOIN m_categories ON e.category_id = m_categories.category_id ";
         
         $countQuery = "SELECT COUNT(*) as total FROM ". $this->table_event;
-        $countQuery .= " JOIN m_categories ON m_events.category_id = m_categories.category_id ";
+        $countQuery .= " JOIN m_categories ON e.category_id = m_categories.category_id ";
 
-        $query .= ' WHERE 1=1 AND status = 1';
+        $query .= ' WHERE 1=1 AND e.status = 1';
         
-        $countQuery .= ' WHERE 1=1 AND status = 1 ';
+        $countQuery .= ' WHERE 1=1 AND e.status = 1 ';
 
         if (!empty($param['event_name'])) {
             $query .= ' AND LOWER(event_name) LIKE LOWER(:event_name) ';
@@ -40,8 +40,8 @@ class Dashboard {
         }
 
         if (!empty($param['category'])) {
-            $query .= ' AND m_events.category_id = :category ';
-            $countQuery .= ' AND m_events.category_id = :category ';
+            $query .= ' AND e.category_id = :category ';
+            $countQuery .= ' AND e.category_id = :category ';
 
             $params[':category'] = $param['category'];
         }
@@ -108,30 +108,18 @@ class Dashboard {
         return $data;
     }
 
-    public function store($body, $filename){
-        try{
-            $event_id = uniqid();
-            $query = "INSERT INTO ".$this->table_event. " (event_id, event_name, location, date, start_time, description, image, total_ticket, available_ticket) VALUES (:event_id, :event_name, :location, :date, :time, :description, :image, :total_ticket, :available_ticket)";
-            $stmt = $this->conn->prepare($query);
+    public function dashboardAdmin() {
+        $query_event = "SELECT e.event_name, e.total_ticket, ROUND((COUNT(b.event_booking_id) / e.total_ticket) * 100, 2) AS ticket_sold_percent, COUNT(b.event_booking_id) AS ticket_sold FROM " . $this->table_event ;
+        $query_event .= " LEFT JOIN r_event_booking AS b ON e.event_id = b.event_id AND (b.status = 1 OR b.status = 3) ";
+        $query_event .= ' WHERE 1=1 AND e.status = 1';
+        $query_event .= ' GROUP BY e.event_name';
+        $query_event .= ' ORDER BY e.date ASC';
 
-            $stmt->bindParam(':event_id', $event_id);
-            $stmt->bindParam(':event_name', $body['eventName']);
-            $stmt->bindParam(':location', $body['eventLocation']);
-            $stmt->bindParam(':date', $body['eventDate']);
-            $stmt->bindParam(':time', $body['eventTime']);
-            $stmt->bindParam(':total_ticket', $body['availableTicket']);
-            $stmt->bindParam(':available_ticket', $body['availableTicket']);
-            $stmt->bindParam(':description', $body['eventDescription']);
-            $stmt->bindParam(':image', $filename);
+        $stmt = $this->conn->prepare($query_event);
+        $stmt->execute();
+        $data_event = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $data = ['data_event' => $data_event];
 
-            $stmt->execute();
-            return true;
-        }catch(PDOException $e){
-            echo $this->response->InternalServerError($e->getMessage());
-            exit;
-        }catch(\Exception $e){
-            echo $this->response->InternalServerError($e->getMessage());
-            exit;
-        }
+        return $data;
     }
 }

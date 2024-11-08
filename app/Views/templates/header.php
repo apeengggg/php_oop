@@ -16,6 +16,8 @@
   <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Daterangepicker CSS -->
