@@ -69,7 +69,7 @@ function renderPagination(totalPages, currentPage) {
     if (currentPage < totalPages) {
         pagination.innerHTML += `
             <li class="page-item">
-                <a class="page-link" href="#" onclick="search(${currentPage + 1})">Next</a>
+                <button type="button" class="page-link" onclick="search(${currentPage + 1})">Next</button>
             </li>
         `;
     }
@@ -79,7 +79,6 @@ function buildTemplate(index, data){
     var rows = ""
 
     var date = moment(data[index].date).format('DD MMMM YYYY')
-    var time = data[index].start_time.slice(0, 5) + " WIB";
     let created_dt = moment(data[index].created_dt).format('DD MMMM YYYY HH:mm:ss')
     let updated_dt = moment(data[index].updated_dt).format('DD MMMM YYYY HH:mm:ss')
     if(data[index].updated_dt === '0000-00-00 00:00:00'){

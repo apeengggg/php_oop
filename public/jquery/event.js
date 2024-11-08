@@ -138,7 +138,7 @@ function renderPagination(totalPages, currentPage) {
     if (currentPage < totalPages) {
         pagination.innerHTML += `
             <li class="page-item">
-                <a class="page-link" href="#" onclick="search(${currentPage + 1})">Next</a>
+                <button type="button" class="page-link" onclick="search(${currentPage + 1})">Next</button>
             </li>
         `;
     }
@@ -149,7 +149,6 @@ function buildTemplate(index, data){
     var string = JSON.stringify(data[index])
 
     let date = moment(data[index].date).format('DD MMMM YYYY')
-    let time = data[index].start_time.slice(0, 5) + " WIB";
 
     var button = `
     <button id="btnEdit${index+1}" class='btn btn-sm btn-primary' onclick='editData(${string})'>

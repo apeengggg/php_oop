@@ -100,7 +100,7 @@ function renderPagination(totalPages, currentPage) {
     if (currentPage < totalPages) {
         pagination.innerHTML += `
             <li class="page-item">
-                <a class="page-link" href="#" onclick="search(${currentPage + 1})">Next</a>
+                <button type="button" class="page-link" onclick="search(${currentPage + 1})">Next</button>
             </li>
         `;
     }

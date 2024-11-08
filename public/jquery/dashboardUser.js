@@ -98,8 +98,6 @@ function buildTemplate(index, data){
     let date_event = moment(data[index].date, 'YYYY-MM-DD')
     let pastDate = date_event.isBefore(moment().startOf('day'))
     
-    let time = data[index].start_time.slice(0, 5) + " WIB";
-    
     let available_ticket = data[index].available_ticket <= 0 ? '<span class="text-danger">Ticket Sold Out</span>' : data[index].available_ticket
 
     let button = ` <div class="card-footer text-right">
@@ -122,7 +120,6 @@ function buildTemplate(index, data){
                 <p class="card-text">Available Ticket: <b>${available_ticket}</b></p>
                 <hr>
                 <p class="card-text">Date: ${date}</p>
-                <p class="card-text">Time: ${time}</p>
                 <p class="card-text">${data[index].location}</p>
             </div>
             ${button}
