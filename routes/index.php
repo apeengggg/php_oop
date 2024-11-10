@@ -8,7 +8,7 @@ require_once __DIR__.'/../app/Middlewares/Jwt.php';
 require_once __DIR__.'/../app/Middlewares/RolesMiddleware.php';
 require_once __DIR__.'/../config/Database.php';
 
-$uri;
+$uri; 
 
 $db = (new Database())->getConnection();
 
